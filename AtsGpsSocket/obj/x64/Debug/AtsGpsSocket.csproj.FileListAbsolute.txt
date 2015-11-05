@@ -1,0 +1,14 @@
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\AtsGpsSocket\obj\x64\Debug\MainWindow.g.cs
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\AtsGpsSocket\obj\x64\Debug\App.g.cs
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\AtsGpsSocket\obj\x64\Debug\MainWindow.baml
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\AtsGpsSocket\obj\x64\Debug\AtsGpsSocket.csproj.GenerateResource.Cache
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\AtsGpsSocket\bin\x64\Debug\AtsGpsSocket.exe.config
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\AtsGpsSocket\bin\x64\Debug\AtsGpsSocket.exe
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\AtsGpsSocket\bin\x64\Debug\AtsGpsSocket.pdb
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\AtsGpsSocket\obj\x64\Debug\AtsGpsSocket.csprojResolveAssemblyReference.cache
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\AtsGpsSocket\obj\x64\Debug\AtsGpsSocket_MarkupCompile.cache
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\AtsGpsSocket\obj\x64\Debug\AtsGpsSocket_MarkupCompile.lref
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\AtsGpsSocket\obj\x64\Debug\AtsGpsSocket.g.resources
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\AtsGpsSocket\obj\x64\Debug\AtsGpsSocket.Properties.Resources.resources
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\AtsGpsSocket\obj\x64\Debug\AtsGpsSocket.exe
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\AtsGpsSocket\obj\x64\Debug\AtsGpsSocket.pdb
