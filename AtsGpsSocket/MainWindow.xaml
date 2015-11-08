@@ -30,20 +30,25 @@
         <Grid Grid.Row="1">
             <TabControl HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
                 <TabItem Header="Server Log">
-                    <ListView Name="listViewServerLog">
+                    <ListView Name="listViewServerLog"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
                         <ListView.View>
-                            <GridView>
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding DateTime}">
+                            <GridView >
+                                <GridViewColumn DisplayMemberBinding="{Binding DateTime}">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="DateTime">DateTime</GridViewColumnHeader>
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Description}">
+                                <GridViewColumn DisplayMemberBinding="{Binding Description}">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Description">Description</GridViewColumnHeader>
                                     </GridViewColumn.Header>
-                                </GridViewColumn>
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding LogType}">
+                                </GridViewColumn >
+                                <GridViewColumn DisplayMemberBinding="{Binding LogType}">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Status">Status</GridViewColumnHeader>
                                     </GridViewColumn.Header>
@@ -87,9 +92,11 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"></ColumnDefinition>
                 <ColumnDefinition Width="auto"></ColumnDefinition>
+                <ColumnDefinition Width="auto" ></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Label Content="Tcp Client(s) : " Grid.Column="0"></Label>
-            <Label Name="labelTcpClientCount" Content="{Binding TcpClientCount, FallbackValue=0}" Grid.Column="1"></Label>
+            <Label Content="Tcp Client(s) : " Grid.Column="0" Margin="5"></Label>
+            <Label Name="labelTcpClientCount" Content="{Binding TcpClientCount, FallbackValue=0}" Grid.Column="1" Margin="5"></Label>
+            <Button Name="buttonClearServerLog" Content="Clear Server Log" Click="buttonClearServerLog_Click" Grid.Column="2" Margin="5"></Button>
         </Grid>
     </Grid>
 </Window>

@@ -43,18 +43,24 @@ namespace AtsGpsSocket {
         }
 
         private void button_Click (object sender, RoutedEventArgs e) {
-            if (button.Content.ToString() == "Connect") {
-                tcpManager = new TcpManager(comboBoxIp.Text, int.Parse(textBoxPort.Text));
-                tcpManager.Event += TcpManage_Event;
-                tcpManager.Start();
-                Timer timerUpdateGui = new Timer(new TimerCallback(updateGui), null, 0, 0);
-                button.Content = "Disconnect";
-            } else {
-                if (tcpManager != null) {
-                    tcpManager.Stop();
-                    tcpManager = null;
-                    button.Content = "Connect";
+            try {
+
+                if (button.Content.ToString() == "Start") {
+
+                    tcpManager = new TcpManager(comboBoxIp.Text, int.Parse(textBoxPort.Text));
+                    tcpManager.Event += TcpManage_Event;
+                    tcpManager.Start();
+                    Timer timerUpdateGui = new Timer(new TimerCallback(updateGui), null, 0, 0);
+                    button.Content = "Stop";
+                } else {
+                    if (tcpManager != null) {
+                        tcpManager.Stop();
+                        tcpManager = null;
+                        button.Content = "Start";
+                    }
                 }
+            } catch (Exception exception) {
+                MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK,MessageBoxImage.Error);
             }
 
         }
@@ -105,6 +111,10 @@ namespace AtsGpsSocket {
 
         private void TcpManage_Event (ServerLog serverLog) {
             display(serverLog);
+        }
+
+        private void buttonClearServerLog_Click (object sender, RoutedEventArgs e) {
+            listViewServerLog.Items.Clear();
         }
     }
 

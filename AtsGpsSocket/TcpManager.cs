@@ -103,6 +103,8 @@ namespace AtsGpsSocket {
                     return;
                 //while ((index = stream.Read(bytes, 0, bytes.Length)) != 0) {
 
+                byte[] msg = { 0x01 };
+
                 while (stream.CanRead) {
 
                     index = stream.Read(bytes, 0, bytes.Length);
@@ -117,8 +119,19 @@ namespace AtsGpsSocket {
                         ServerLog serverLog = new ServerLog(data, LogType.SERVER_INCOMING_DATA);
                         Event(serverLog);
                     }
+
+
                     //byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-                    //stream.Write(msg, 0, msg.Length);
+                    int number = (int)bytes[0];
+                    ServerLog serverLog1 = new ServerLog(number.ToString(), LogType.SERVER_INCOMING_DATA);
+                    Event(serverLog1);
+              
+                    //if (bytes[0] == 0x08) {
+                    //    stream.Write(msg, 0, msg.Length);  
+                    //    msg[0]++;
+                    //}
+
+                   
                 }
             } catch (Exception exception) {
                 ServerLog serverLog = new ServerLog("TcpClient : " + exception.Message, LogType.SERVER_ERROR);

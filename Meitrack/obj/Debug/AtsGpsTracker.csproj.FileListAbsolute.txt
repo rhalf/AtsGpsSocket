@@ -1,0 +1,4 @@
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\Meitrack\bin\Debug\Meitrack.dll
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\Meitrack\bin\Debug\Meitrack.pdb
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\Meitrack\obj\Debug\Meitrack.dll
+C:\Users\Rhalf\Documents\Visual Studio 2015\Projects\AtsSocket\Meitrack\obj\Debug\Meitrack.pdb

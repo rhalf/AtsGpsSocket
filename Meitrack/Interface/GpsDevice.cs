@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GpsTrackingDevice.Interface {
+namespace AtsGpsTracker.Interface {
 
     public enum GpsDeviceType {
         Mvt100,
