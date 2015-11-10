@@ -3,3 +3,9 @@ C:\Users\Rhalf\Documents\GitHub\AtsSocket\AtsGps\bin\Debug\AtsGps.dll
 C:\Users\Rhalf\Documents\GitHub\AtsSocket\AtsGps\bin\Debug\AtsGps.pdb
 C:\Users\Rhalf\Documents\GitHub\AtsSocket\AtsGps\obj\Debug\AtsGps.dll
 C:\Users\Rhalf\Documents\GitHub\AtsSocket\AtsGps\obj\Debug\AtsGps.pdb
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGps\bin\Debug\AtsGps.dll
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGps\bin\Debug\AtsGps.pdb
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGps\bin\Debug\System.Net.Http.dll
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGps\obj\Debug\AtsGps.csprojResolveAssemblyReference.cache
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGps\obj\Debug\AtsGps.dll
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGps\obj\Debug\AtsGps.pdb

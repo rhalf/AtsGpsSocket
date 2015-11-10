@@ -1,7 +1,7 @@
-﻿<Application x:Class="AtsGps.App"
+﻿<Application x:Class="AtsGpsSocketTool.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:AtsGps"
+             xmlns:local="clr-namespace:AtsGpsSocketTool"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

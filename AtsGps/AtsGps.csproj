@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AtsGps</RootNamespace>
     <AssemblyName>AtsGps</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -46,9 +46,10 @@
   <ItemGroup>
     <Compile Include="Coordinate.cs" />
     <Compile Include="ITracker.cs" />
+    <Compile Include="Meitrack\MeitrackGprsCommand.cs" />
     <Compile Include="Tracker.cs" />
-    <Compile Include="Meitrack\EMeitrack.cs" />
-    <Compile Include="Meitrack\IMeitrackGprs.cs" />
+    <Compile Include="Meitrack\Enum.cs" />
+    <Compile Include="Meitrack\MeitrackTrackerCommand.cs" />
     <Compile Include="Meitrack\MeitrackTcpManager.cs" />
     <Compile Include="Meitrack\Mvt100.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

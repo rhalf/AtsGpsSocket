@@ -12,7 +12,7 @@ using System.Windows.Controls;
 
 
 
-namespace AtsGpsSocket {
+namespace AtsGpsSocketTool {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -60,7 +60,16 @@ namespace AtsGpsSocket {
         }
 
         private void MeitrackTcpManager_Event (ServerLog serverLog) {
-            display(serverLog);
+
+            if (serverLog.LogType == LogType.SERVER_INCOMING_DATA) {
+                MeitrackGprsCommand meitrackGprsCommand = new MeitrackGprsCommand();
+                meitrackGprsCommand.Parse(serverLog.Description);
+            } else {
+                display(serverLog);
+
+            }
+
+
         }
 
         private void Window_Closing (object sender, System.ComponentModel.CancelEventArgs e) {
@@ -75,6 +84,8 @@ namespace AtsGpsSocket {
 
 
         private void Window_Loaded (object sender, RoutedEventArgs e) {
+            this.Title = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + " - " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+
             serverLogs = new ServerLogs();
             this.dataGridServerLog.ItemsSource = serverLogs;
 

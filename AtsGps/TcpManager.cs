@@ -1,5 +1,4 @@
-﻿using AtsGps;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,21 +14,37 @@ namespace AtsGps {
 
         Thread threadTcpListener;
 
+
+
+        public List<object> listTcpClient {
+            get;
+            set;
+        }
+
+
+
+        public delegate void EventHandler (ServerLog serverLog);
+        public event EventHandler Event;
+
+
+
+        protected void OnEvent(ServerLog serverLog) {
+            this.Event(serverLog);
+        }
+
         public int TcpClientCount {
             get {
                 return listTcpClient.Count;
             }
         }
 
-        List<object> listTcpClient = new List<object>() { };
-
-        public delegate void EventHandler (ServerLog serverLog);
-        public event EventHandler Event;
-
         public TcpManager (string ip, int port) {
             try {
                 IpAddress = IPAddress.Parse(ip);
                 tcpListener = new TcpListener(IpAddress, port);
+
+
+                listTcpClient = new List<object>();
             } catch (Exception exception) {
                 throw exception;
             }
@@ -81,59 +96,8 @@ namespace AtsGps {
             }
         }
 
-        private void threadTcpClientRun (object obj) {
-            TcpClient tcpClient = (TcpClient)obj;
-            lock (listTcpClient) {
-                listTcpClient.Add(tcpClient);
-            }
-            try {
-                Byte[] readBytes = new Byte[256];
-                String message = null;
-                int index;
-
-                NetworkStream stream = tcpClient.GetStream();
-
-                if (stream == null)
-                    return;
-
-
-                byte[] msg = { 0x01 };
-
-                while (stream.CanRead) {
-                    //Receive message
-                    index = stream.Read(readBytes, 0, readBytes.Length);
-
-                    if (index == 0)
-                        return;
-
-                    message = System.Text.Encoding.ASCII.GetString(readBytes, 0, index);
-                    Byte[] data = new Byte[index];
-                    Array.Copy(readBytes, data, index);
-                    string hex = BitConverter.ToString(data);
-                    message = message.Trim();
-
-                    ServerLog serverLog = new ServerLog(message, LogType.SERVER_INCOMING_DATA);
-                    Event(serverLog);
-                    serverLog = new ServerLog(hex, LogType.SERVER_INCOMING_DATA);
-                    Event(serverLog);
-
-                    //Send message
-                    if (readBytes[0] == 0x08) {
-
-                        byte[] writeBytes = System.Text.Encoding.ASCII.GetBytes(message);
-                        stream.Write(writeBytes, 0, writeBytes.Length);
-                    }
-
-                }
-            } catch (Exception exception) {
-                ServerLog serverLog = new ServerLog("TcpClient : " + exception.Message, LogType.SERVER_ERROR);
-                Event(serverLog);
-            } finally {
-                lock (listTcpClient) {
-                    tcpClient.Close();
-                    listTcpClient.Remove(tcpClient);
-                }
-            }
+        public virtual void threadTcpClientRun (object obj) {
+            throw new NotImplementedException();
         }
 
     }
