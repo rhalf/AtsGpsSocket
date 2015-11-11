@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AtsGps.Meitrack {
 
-    public enum Meitrack {
+    public enum MeitrackDevice {
         MVT100,
         T1
     }

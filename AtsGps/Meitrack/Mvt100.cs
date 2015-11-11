@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AtsGps.Meitrack {
-    class Mvt100 : TrackerCommand {
+    class Mvt100 {
         
     }
 }

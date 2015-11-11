@@ -43,6 +43,7 @@ namespace AtsGpsSocketTool {
 
                     meitrackTcpManager = new MeitractTcpManager(comboBoxIp.Text, int.Parse(textBoxPort.Text));
                     meitrackTcpManager.Event += MeitrackTcpManager_Event;
+                    meitrackTcpManager.DataReceived += MeitrackTcpManager_DataReceived;
                     meitrackTcpManager.Start();
                     Timer timerUpdateGui = new Timer(new TimerCallback(updateGui), null, 0, 0);
                     button.Content = "Stop";
@@ -54,23 +55,25 @@ namespace AtsGpsSocketTool {
                     }
                 }
             } catch (Exception exception) {
-                MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK,MessageBoxImage.Error);
+                MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
+        }
+
+        private void MeitrackTcpManager_DataReceived (byte[] data) {
+            try {
+                MeitrackGprsCommand meitrackGprsCommand = MeitrackGprsCommand.Parse(data);
+          
+
+            }  catch (Exception exception) {
+                Debug.Write(exception);
+            }
         }
 
         private void MeitrackTcpManager_Event (ServerLog serverLog) {
-
-            if (serverLog.LogType == LogType.SERVER_INCOMING_DATA) {
-                MeitrackGprsCommand meitrackGprsCommand = new MeitrackGprsCommand();
-                meitrackGprsCommand.Parse(serverLog.Description);
-            } else {
-                display(serverLog);
-
-            }
-
-
+            display(serverLog);
         }
+
 
         private void Window_Closing (object sender, System.ComponentModel.CancelEventArgs e) {
             try {
@@ -117,7 +120,7 @@ namespace AtsGpsSocketTool {
         }
 
 
-     
+
 
         private void buttonClearServerLog_Click (object sender, RoutedEventArgs e) {
             serverLogs.Clear();

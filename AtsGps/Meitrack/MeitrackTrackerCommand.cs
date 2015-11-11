@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace AtsGps.Meitrack {
 
@@ -8,52 +9,18 @@ namespace AtsGps.Meitrack {
     //name>/<Geo-fence number>/<Temperature sensor No./<Assisted event info>,<Customized data>,<Protocol version>,<Fuel
     //percentage>,<Temperature sensor 1 value|Temperature sensor 2 value|……Temperature sensor n value><*Checksum>\r\n
 
-    abstract class MeitrackTrackerCommand {
-        protected virtual Boolean Parse (Byte[] bytes) {
+    public class MeitrackTrackerCommand {
+        public MeitrackTrackerCommand (String meitrackTrackerCommand) {
+            try {
+                
+
+            } catch (Exception exception) {
+                throw exception;
+            }
+            //this.Parse(meitrackTrackerCommand);
+        }
+        protected virtual Boolean Parse (String meitrackTrackerCommand) {
             throw new NotImplementedException();
-        }
-        /// <summary>
-        /// Indicates the GPRS data packet header from the server to the tracker or
-        /// Indicates the GPRS data packet header from the tracker to the server. 
-        /// Ex.
-        /// The header type is ASCII. (Hexadecimal is represented as 0x40.) Ex. "@@" or 
-        /// The header type is ASCII. (Hexadecimal is represented as 0x24.) Ex. "$$"
-        /// </summary>
-        protected Byte[] DataPacketHeader {
-            get;
-            set;
-        }
-        /// <summary>
-        /// Has one byte. The type is the ASCII, and its value ranges from 0x41 to 0x7A.
-        /// Ex. 
-        /// "Q" 
-        /// </summary>
-        protected Byte DataIdentifier {
-            get;
-            set;
-        }
-        /// <summary>
-        /// Indicates the length of characters from the first comma (,) to "\r\n". The data length is decimal.
-        /// Ex. 25 
-        /// </summary>
-        protected Int32 DataLength {
-            get;
-            set;
-        }
-        /// <summary>
-        /// Indicates the tracker IMEI. The number type is ASCII. It has 15 digits generally.
-        /// Ex. "353358017784062"
-        /// </summary>
-        protected String Imei {
-            get;
-            set;
-        }
-        /// <summary>
-        /// Command type Hexadecimal Ex. AAA
-        /// </summary>
-        protected CommandType CommandType {
-            get;
-            set;
         }
         /// <summary>
         /// Event code Decimal Ex. 1

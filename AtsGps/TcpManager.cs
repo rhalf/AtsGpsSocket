@@ -25,12 +25,17 @@ namespace AtsGps {
 
         public delegate void EventHandler (ServerLog serverLog);
         public event EventHandler Event;
-
-
-
-        protected void OnEvent(ServerLog serverLog) {
+        protected void triggerEvent(ServerLog serverLog) {
             this.Event(serverLog);
         }
+
+        public delegate void DataReceicedHandler (Byte[] data);
+        public event DataReceicedHandler DataReceived;
+        protected void triggerDataReceived(Byte[] data) {
+            this.DataReceived(data);
+        }
+
+
 
         public int TcpClientCount {
             get {
@@ -42,8 +47,6 @@ namespace AtsGps {
             try {
                 IpAddress = IPAddress.Parse(ip);
                 tcpListener = new TcpListener(IpAddress, port);
-
-
                 listTcpClient = new List<object>();
             } catch (Exception exception) {
                 throw exception;

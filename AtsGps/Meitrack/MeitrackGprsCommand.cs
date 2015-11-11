@@ -5,44 +5,20 @@ using System.Linq;
 using System.Text;
 
 namespace AtsGps.Meitrack {
+    //MEITRACK GPRS Protocol
+    //For MT80i/MT88/MT90/MVT100/MVT340 and MVT380/MVT800 /MVT600/T1/TC68/TC68S
+    //Version V1.6 Confidential Internal Documentation
+    //Created by: Rhalf Wendel D Caacbay
+    //Created on: 20151108
     public class MeitrackGprsCommand {
-        //MEITRACK GPRS Protocol
-        //For MT80i/MT88/MT90/MVT100/MVT340 and MVT380/MVT800 /MVT600/T1/TC68/TC68S
-        //Version V1.6 Confidential Internal Documentation
-
-        //Created by: Rhalf Wendel D Caacbay
-        //Created on: 20151108
-
-        public virtual Boolean Parse (Byte[] bytes) {
-            try {
-                this.DataPacketHeader = new Byte[] { bytes[0], bytes[1] };
-                this.DataIdentifier = bytes[2];
-
-                String dataLength = ASCIIEncoding.Unicode.GetString(new Byte[] { bytes[3], bytes[4] });
-                this.DataLength = Int32.Parse(dataLength);
-
-
-                String[] meitrackGprsCommand = ASCIIEncoding.Unicode.GetString(bytes).Split(',');
-
-                this.Imei = meitrackGprsCommand[1];
-                this.CommandType = (CommandType) Int32.Parse(meitrackGprsCommand[2]);
-
-
-                return true;
-            } catch (Exception exception) {
-                Debug.Write(exception);
-                return false;
-            }
-
-        }
-        /// <summary>
+       /// <summary>
         /// Indicates the GPRS data packet header from the server to the tracker or
         /// Indicates the GPRS data packet header from the tracker to the server. 
         /// Ex.
         /// The header type is ASCII. (Hexadecimal is represented as 0x40.) Ex. "@@" or 
         /// The header type is ASCII. (Hexadecimal is represented as 0x24.) Ex. "$$"
         /// </summary>
-        protected Byte[] DataPacketHeader {
+        protected String DataPacketHeader {
             get;
             set;
         }
@@ -51,7 +27,7 @@ namespace AtsGps.Meitrack {
         /// Ex. 
         /// "Q" 
         /// </summary>
-        protected Byte DataIdentifier {
+        protected Int32 DataIdentifier {
             get;
             set;
         }
@@ -78,5 +54,70 @@ namespace AtsGps.Meitrack {
             get;
             set;
         }
+
+        protected MeitrackTrackerCommand MeitrackTrackerCommand {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// $$`Data identifier``Data length`,`IMEI`,`Command type`,`Command``*Checksum`\r\n 
+        /// </summary>
+        /// <param name="bytes">Raw data from the socket</param>
+        /// <param name="length">Length of the raw data from the socket</param>
+        /// <returns>Return true if parsed successfully</returns>
+        public static MeitrackGprsCommand Parse (Byte[] bytes) {
+            MeitrackGprsCommand meitrackGprsCommand = new MeitrackGprsCommand();
+            //Header
+            meitrackGprsCommand.DataPacketHeader = ASCIIEncoding.UTF8.GetString(new Byte[] { bytes[0], bytes[1] });
+
+            if (!meitrackGprsCommand.DataPacketHeader.Equals("@@") && !meitrackGprsCommand.DataPacketHeader.Equals("$$")) {
+                throw new Exception("Protocol format is not Meitrack.");
+            }
+
+            try {
+                String[] gprsCommand = ASCIIEncoding.UTF8.GetString(bytes).Split(','); 
+                //Data Validation
+                //-Get CheckSum
+                String[] data = ASCIIEncoding.UTF8.GetString(bytes).Split('*');
+                Byte[] checkSumByte = new Byte[4];
+                Int32 checkSum = Int32.Parse(data[1].Trim(), System.Globalization.NumberStyles.HexNumber);
+                //-Formulate Format (@@Q25,353358017784062,A10*)
+                String packetTranslated = gprsCommand[0] + "," + gprsCommand[1] + "," + gprsCommand[2] + "*";
+                Byte[] packets = ASCIIEncoding.UTF8.GetBytes(packetTranslated);
+                Int32 packetsSum = 0;
+                for (int index = 0; index < packets.Length; index++) {
+                    packetsSum += (Int32)packets[index];
+                }
+
+                //if (packetsSum != checkSum) {
+                //    throw new Exception("Wrong checkSum. Data is corrupted or altered");
+                //}
+
+                //If Data Is Valid
+                //DataIdentifier
+                meitrackGprsCommand.DataIdentifier = (Int32) bytes[2];
+                String dataLength = ASCIIEncoding.UTF8.GetString(new Byte[] { bytes[3], bytes[4], bytes[5] });
+                meitrackGprsCommand.DataLength = Int32.Parse(dataLength);
+                //Imei
+                meitrackGprsCommand.Imei = gprsCommand[1];
+                //CommandType
+                meitrackGprsCommand.CommandType = (CommandType)Int32.Parse(gprsCommand[2],System.Globalization.NumberStyles.HexNumber);
+
+                string meitrackTrackerCommand = null;
+                for (int index = 3; index < gprsCommand.Length; index++) {
+                    meitrackTrackerCommand += gprsCommand[index] + ",";
+                }
+
+                meitrackTrackerCommand = meitrackTrackerCommand.TrimEnd(',');
+                meitrackGprsCommand.MeitrackTrackerCommand = new MeitrackTrackerCommand(meitrackTrackerCommand);
+
+                return meitrackGprsCommand;
+            } catch (Exception exception) {
+                throw exception;
+            }
+
+        }
+       
     }
 }
