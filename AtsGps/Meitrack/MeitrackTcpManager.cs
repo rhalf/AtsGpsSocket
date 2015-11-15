@@ -10,6 +10,7 @@ namespace AtsGps.Meitrack {
             TcpClient tcpClient = (TcpClient)obj;
             lock (base.listTcpClient) {
                 listTcpClient.Add(tcpClient);
+                base.TcpClientCount = listTcpClient.Count;
             }
             try {
                 Byte[] bytesReceived = new Byte[256];
@@ -34,7 +35,7 @@ namespace AtsGps.Meitrack {
                     Byte[] bytesExact = new Byte[index];
                     Array.Copy(bytesReceived, bytesExact, index);
                     base.triggerDataReceived(bytesExact);
-
+                    //base.triggerEvent(new ServerLog("Data Received", LogType.SERVER_INCOMING_DATA));
 
                     //message = System.Text.Encoding.ASCII.GetString(readBytes, 0, index);
                     //Byte[] data = new Byte[index];
@@ -54,12 +55,12 @@ namespace AtsGps.Meitrack {
 
                 }
             } catch (Exception exception) {
-                ServerLog serverLog = new ServerLog("TcpClient : " + exception.Message, LogType.SERVER_ERROR);
+                ServerLog serverLog = new ServerLog(exception.Message, LogType.SERVER_ERROR);
                 base.triggerEvent(serverLog);
             } finally {
                 lock (listTcpClient) {
-                    
                     listTcpClient.Remove(tcpClient);
+                    base.TcpClientCount = listTcpClient.Count;
                 }
                 tcpClient.Close();
             }

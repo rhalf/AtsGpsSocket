@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -8,7 +9,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace AtsGps {
-    public class TcpManager {
+    public class TcpManager : INotifyPropertyChanged {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged (String propertyName) {
+            if (PropertyChanged != null) {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
         private TcpListener tcpListener;
         private IPAddress IpAddress;
 
@@ -36,10 +44,14 @@ namespace AtsGps {
         }
 
 
-
+        Int32 tcpClientCount = 0;
         public int TcpClientCount {
             get {
-                return listTcpClient.Count;
+                return tcpClientCount;
+            }
+            set {
+                tcpClientCount = value;
+                OnPropertyChanged("TcpClientCount");
             }
         }
 
@@ -89,7 +101,7 @@ namespace AtsGps {
                     ThreadPool.QueueUserWorkItem(new WaitCallback(threadTcpClientRun), tcpClient);
                 }
             } catch (Exception exception) {
-                ServerLog serverLog = new ServerLog("TcpListener : " + exception.Message, LogType.SERVER_ERROR);
+                ServerLog serverLog = new ServerLog(exception.Message, LogType.SERVER_ERROR);
                 Event(serverLog);
             } finally {
                 foreach (TcpClient tcpClient in listTcpClient) {
