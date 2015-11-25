@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Manufacturer.cs" />
     <Compile Include="Coordinate.cs" />
     <Compile Include="ITracker.cs" />
     <Compile Include="Meitrack\MeitrackGprsCommand.cs" />

@@ -18,63 +18,60 @@ namespace AtsGpsSocketTool {
     /// </summary>
     public partial class MainWindow : Window {
 
-        MeitractTcpManager meitrackTcpManager;
+        MeitrackTcpManager meitrackTcpManager;
 
         private ServerLogs serverLogs;
 
         public MainWindow () {
             InitializeComponent();
         }
-
-        private void display (ServerLog serverLog) {
+        private void display (Log log) {
             try {
                 Dispatcher.Invoke(new Action(() => {
-                    serverLogs.Add(serverLog);
+                    serverLogs.Add(log);
                 }));
             } catch (Exception exception) {
                 Debug.Write(exception);
             }
         }
-
         private void button_Click (object sender, RoutedEventArgs e) {
             try {
 
                 if (button.Content.ToString() == "Start") {
 
-                    meitrackTcpManager = new MeitractTcpManager(comboBoxIp.Text, int.Parse(textBoxPort.Text));
+                    meitrackTcpManager = new MeitrackTcpManager();
+                    meitrackTcpManager.IpAddress = IPAddress.Parse(comboBoxIp.Text);
+                    meitrackTcpManager.Port = Int32.Parse(textBoxPort.Text);
                     meitrackTcpManager.Event += MeitrackTcpManager_Event;
                     meitrackTcpManager.DataReceived += MeitrackTcpManager_DataReceived;
                     meitrackTcpManager.Start();
-                    Timer timerUpdateGui = new Timer(new TimerCallback(updateGui), null, 0, 0);
+
+                    labelTcpClientCount.DataContext = meitrackTcpManager;
+
                     button.Content = "Stop";
                 } else {
-                    if (meitrackTcpManager != null) {
-                        meitrackTcpManager.Stop();
-                        meitrackTcpManager = null;
-                        button.Content = "Start";
-                    }
+                    meitrackTcpManager.Stop();
+                    button.Content = "Start";
+
                 }
             } catch (Exception exception) {
                 MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
         }
-
-        private void MeitrackTcpManager_DataReceived (byte[] data) {
+        private void MeitrackTcpManager_DataReceived (Object sender, Byte[] data) {
             try {
-                MeitrackGprsCommand meitrackGprsCommand = MeitrackGprsCommand.Parse(data);
           
+                MeitrackGprsCommand meitrackGprsCommand = MeitrackGprsCommand.Parse(data);
 
-            }  catch (Exception exception) {
+
+            } catch (Exception exception) {
                 Debug.Write(exception);
             }
         }
-
-        private void MeitrackTcpManager_Event (ServerLog serverLog) {
-            display(serverLog);
+        private void MeitrackTcpManager_Event (Object sender, Log log) {
+            display(log);
         }
-
-
         private void Window_Closing (object sender, System.ComponentModel.CancelEventArgs e) {
             try {
                 if (meitrackTcpManager == null)
@@ -84,8 +81,6 @@ namespace AtsGpsSocketTool {
 
             }
         }
-
-
         private void Window_Loaded (object sender, RoutedEventArgs e) {
             this.Title = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + " - " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 
@@ -104,30 +99,15 @@ namespace AtsGpsSocketTool {
                     }
                 }
             }
+
+
         }
-        private void updateGui (object state) {
-            try {
-                while (meitrackTcpManager != null) {
-                    Dispatcher.Invoke(new Action(() => {
-                        labelTcpClientCount.Content = meitrackTcpManager.TcpClientCount;
-                    }));
-                    Thread.Sleep(1000);
-                }
-            } catch (Exception exception) {
-                ServerLog serverLog = new ServerLog(exception.Message, LogType.SERVER_WARNING);
-                display(serverLog);
-            }
-        }
-
-
-
 
         private void buttonClearServerLog_Click (object sender, RoutedEventArgs e) {
             serverLogs.Clear();
         }
-
         private void listViewServerLog_SelectionChanged (object sender, SelectionChangedEventArgs e) {
-            foreach (var item in e.AddedItems.OfType<ServerLog>()) {
+            foreach (var item in e.AddedItems.OfType<Log>()) {
                 Clipboard.SetText(item.Description);
             }
         }

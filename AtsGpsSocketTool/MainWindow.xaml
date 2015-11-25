@@ -69,7 +69,7 @@
                 <ColumnDefinition Width="auto" ></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Label Content="Tcp Client(s) : " Grid.Column="0" Margin="5"></Label>
-            <Label Name="labelTcpClientCount" Content="{Binding TcpClientCount, FallbackValue=0}" Grid.Column="1" Margin="5"></Label>
+            <TextBox Name="labelTcpClientCount" Text="{Binding Connections}" Width="40"  Grid.Column="1" Margin="5"></TextBox>
             <Button Name="buttonClearServerLog" Content="Clear Server Log" Click="buttonClearServerLog_Click" Grid.Column="2" Margin="5"></Button>
         </Grid>
     </Grid>

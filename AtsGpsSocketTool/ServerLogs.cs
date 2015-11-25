@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 using AtsGps;
 
 namespace AtsGpsSocketTool {
-    public class ServerLogs : ObservableCollection<ServerLog> { }
+    public class ServerLogs : ObservableCollection<Log> { }
 }

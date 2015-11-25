@@ -1,68 +1,68 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Text;
 
 namespace AtsGps.Meitrack {
-    public class MeitractTcpManager : TcpManager {
-        public MeitractTcpManager (string ip, int port) : base(ip, port) { }
+    public class MeitrackTcpManager : TcpManager {
+        public MeitrackTcpManager () : base() { }
 
 
-        public override void threadTcpClientRun (object obj) {
-            TcpClient tcpClient = (TcpClient)obj;
-            lock (base.listTcpClient) {
-                listTcpClient.Add(tcpClient);
-                base.TcpClientCount = listTcpClient.Count;
-            }
+        public override void threadTcpClientRun (object state) {
             try {
-                Byte[] bytesReceived = new Byte[256];
-       
-                int index = 0;
+                lock (this) {
+                    base.Connections = base.Connections + 1;
+                }
+                using (TcpClient tcpClient = (TcpClient)state) {
+                    //------------------------------------------------BeginLoop
+                    do {
+                        if (!tcpClient.Connected) {
+                            return;
+                        }
 
-                NetworkStream stream = tcpClient.GetStream();
+                        NetworkStream networkStream;
 
-                if (stream == null)
-                    return;
+                        networkStream = tcpClient.GetStream();
+                        if (networkStream == null)
+                            throw new Exception("Network Stream is null.");
+                        //------------------------------------------------Receive message
+                        if (!networkStream.DataAvailable)
+                            continue;
+
+                        Byte[] bytesReceived = new Byte[256];
+                        Int32 index = networkStream.Read(bytesReceived, 0, bytesReceived.Length);
+                        if (index == 0)
+                            return;
+
+                        base.ReceiveBytes += index;
+
+                        Byte[] bytesExact = new Byte[index];
+                        Array.Copy(bytesReceived, bytesExact, index);
+                        base.triggerDataReceived(bytesExact);
+
+                        //------------------------------------------------Send message
+                        if (bytesReceived[0] == 13 && bytesReceived[1] == 10) {
+                            Array.Clear(bytesReceived, 0, bytesReceived.Length);
+                            continue;
+                        }
+                        String message = "OK";
+                        byte[] writeBytes = System.Text.Encoding.ASCII.GetBytes(message);
+                        networkStream.Write(writeBytes, 0, writeBytes.Length);
 
 
-                byte[] msg = { 0x01 };
-
-                while (stream.CanRead) {
-                    //Receive message
-                    index = stream.Read(bytesReceived, 0, bytesReceived.Length);
-
-                    if (index == 0)
-                        return;
-
-                    Byte[] bytesExact = new Byte[index];
-                    Array.Copy(bytesReceived, bytesExact, index);
-                    base.triggerDataReceived(bytesExact);
-                    //base.triggerEvent(new ServerLog("Data Received", LogType.SERVER_INCOMING_DATA));
-
-                    //message = System.Text.Encoding.ASCII.GetString(readBytes, 0, index);
-                    //Byte[] data = new Byte[index];
-                    //Array.Copy(readBytes, data, index);
-                    //string hex = BitConverter.ToString(data);
-                    //message = message.Trim();
-
-                    //serverLog = new ServerLog(message, LogType.SERVER_INCOMING_DATA);
-                    //base.OnEvent(serverLog);
-
-                    //Send message
-                    //if (readBytes[0] == 0x08) {
-
-                    //    byte[] writeBytes = System.Text.Encoding.ASCII.GetBytes(message);
-                    //    stream.Write(writeBytes, 0, writeBytes.Length);
-                    //}
+                        networkStream.Close();
+                    } while (true);
+                    //------------------------------------------------EndLoop
 
                 }
+
             } catch (Exception exception) {
-                ServerLog serverLog = new ServerLog(exception.Message, LogType.SERVER_ERROR);
+                Log serverLog = new Log(exception.Message, LogType.ERROR);
                 base.triggerEvent(serverLog);
             } finally {
-                lock (listTcpClient) {
-                    listTcpClient.Remove(tcpClient);
-                    base.TcpClientCount = listTcpClient.Count;
+                lock (this) {
+                    base.Connections = base.Connections - 1;
                 }
-                tcpClient.Close();
+
             }
         }
     }
