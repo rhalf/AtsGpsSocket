@@ -4,22 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525"
+        Title="MainWindow" Height="417.742" Width="870.766"
         Closing="Window_Closing"
         Loaded="Window_Loaded">
     <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="75"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="75"></ColumnDefinition>
+                <ColumnDefinition Width="85"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Button x:Name="button" Grid.Column="0" Content="Start" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"  Click="button_Click"  Margin="5"/>
             <ComboBox x:Name="comboBoxIp" Grid.Column="1" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="5"/>
@@ -61,16 +61,21 @@
                 </TabItem>
             </TabControl>
         </Grid>
+        <GroupBox  Grid.Row="2"   Name="groupTcpManager">
+            <StackPanel Orientation="Horizontal" >
+                <Label Content="Packets" Width="60"></Label>
+                <Label  Content="{Binding Packets, Mode=OneWay}" Width="95"></Label>
+                <Label Content="In" Width="60"></Label>
+                <Label  Content="{Binding BufferIn.Count, Mode=OneWay}" Width="95"></Label>
+                <Label Content="Out" Width="60"></Label>
+                <Label  Content="{Binding BufferOut.Count, Mode=OneWay}" Width="95"></Label>
+                <Label Content="Send" Width="60"></Label>
+                <Label Content="Receive" Width="60"></Label>
+                <Label  Content="{Binding ReceiveBytes, Mode=OneWay}" Width="95"></Label>
+                <Label  Content="{Binding SendBytes}" Width="90"></Label>
+                <Button Content="Clear" Click="buttonClearServerLog_Click" Margin="5" Width="75"></Button>
+            </StackPanel>
+        </GroupBox>
 
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"></ColumnDefinition>
-                <ColumnDefinition Width="auto"></ColumnDefinition>
-                <ColumnDefinition Width="auto" ></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Label Content="Tcp Client(s) : " Grid.Column="0" Margin="5"></Label>
-            <TextBox Name="labelTcpClientCount" Text="{Binding Connections}" Width="40"  Grid.Column="1" Margin="5"></TextBox>
-            <Button Name="buttonClearServerLog" Content="Clear Server Log" Click="buttonClearServerLog_Click" Grid.Column="2" Margin="5"></Button>
-        </Grid>
     </Grid>
 </Window>

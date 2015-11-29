@@ -26,10 +26,10 @@ namespace AtsGps {
         protected void triggerEvent (Log log) {
             this.Event(this, log);
         }
-        public delegate void DataReceicedHandler (Object sender, Byte[] data);
+        public delegate void DataReceicedHandler (Object sender, Object trackerData);
         public event DataReceicedHandler DataReceived;
-        protected void triggerDataReceived (Byte[] data) {
-            this.DataReceived(this, data);
+        protected void triggerDataReceived (Object trackerData) {
+            this.DataReceived(this, trackerData);
         }
         //----------------------------------------------Initialized
         private Manufacturer manufacturer;
@@ -43,6 +43,8 @@ namespace AtsGps {
         private ConcurrentQueue<Object> bufferIn;
         private ConcurrentQueue<Object> bufferOut;
         private Boolean isEnabled;
+        private Boolean isActivated;
+
         //----------------------------------------------Getter/Setter
         public Manufacturer Manufacturer {
             get { return manufacturer; }
@@ -51,13 +53,13 @@ namespace AtsGps {
                 OnPropertyChanged("Manufacturer");
             }
         }
-        public Int32 Connections {
+        public Int32 Packets {
             get {
                 return connections;
             }
             set {
                 connections = value;
-                OnPropertyChanged("TcpClient");
+                OnPropertyChanged("Packets");
             }
         }
         public IPAddress IpAddress {
@@ -123,6 +125,15 @@ namespace AtsGps {
                 OnPropertyChanged("IsEnabled");
             }
         }
+        public Boolean IsActivated {
+            get {
+                return isActivated;
+            }
+            set {
+                isActivated = value;
+                OnPropertyChanged("IsActivated");
+            }
+        }
         //----------------------------------------------Functions
         //public TcpManager (String ip, Int32 port) {
         //    try {
@@ -144,39 +155,50 @@ namespace AtsGps {
         }
         public void Start () {
             try {
-                tcpListener = new TcpListener(this.ipAddress, this.port);
+
+                ThreadPool.SetMaxThreads(100, 100);
+                ThreadPool.SetMinThreads(100, 100);
+
+                if (tcpListener == null) {
+                    tcpListener = new TcpListener(this.ipAddress, this.port);
+                }
                 tcpListener.Start();
 
-                threadTcpListener = new Thread(threadTcpListenerRun);
-                threadTcpListener.Start(tcpListener);
+                if (threadTcpListener == null) {
+                    threadTcpListener = new Thread(threadTcpListenerRun);
+                    threadTcpListener.Start(tcpListener);
+                }
 
+                this.isActivated = true;
                 Log serverLog = new Log("Server starts..", LogType.RUNNING);
                 Event(this, serverLog);
             } catch (Exception exception) {
+                this.isActivated = false;
                 Log serverLog = new Log(exception.Message, LogType.ERROR);
                 Event(this, serverLog);
                 tcpListener.Stop();
                 tcpListener = null;
-                GC.Collect();
             }
         }
         public void Stop () {
             try {
-                tcpListener.Stop();
-                tcpListener = null;
-                GC.Collect();
+                if (this.isActivated == true) {
+                    tcpListener.Stop();
+                }
+                this.isActivated = false;
+                Log serverLog = new Log("Server stopped..", LogType.STOP);
+                Event(this, serverLog);
             } catch (Exception exception) {
                 throw exception;
             } finally {
-                Log serverLog = new Log("Server stopped..", LogType.STOP);
-                Event(this, serverLog);
+                GC.Collect();
             }
         }
         public void Refresh () {
             OnPropertyChanged("Manufacturer");
             OnPropertyChanged("IpAddress");
             OnPropertyChanged("Port");
-            OnPropertyChanged("Connections");
+            OnPropertyChanged("Packets");
             OnPropertyChanged("SendBytes");
             OnPropertyChanged("ReceiveBytes");
             OnPropertyChanged("BufferIn");
@@ -187,19 +209,36 @@ namespace AtsGps {
         private void threadTcpListenerRun (object state) {
             TcpListener tcpListener = (TcpListener)state;
             while (true) {
-                try {
-                    TcpClient tcpClient = tcpListener.AcceptTcpClient();
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(threadTcpClientRun), tcpClient);
-                } catch {
-                    return;
+                if (this.isActivated == true) {
+                    try {
+                        TcpClient tcpClient = tcpListener.AcceptTcpClient();
+                        ThreadPool.QueueUserWorkItem(new WaitCallback(threadTcpClientRun), tcpClient);
+                    } catch {
+
+                    }
                 }
             }
         }
 
-        public virtual void threadTcpClientRun (object state) {
-            throw new NotImplementedException();
+        private void threadTcpClientRun (object state) {
+            try {
+                lock (this) {
+                    this.Packets++;
+                }
+
+                using (TcpClient tcpClient = (TcpClient)state) {
+                    this.Communicate((NetworkStream)tcpClient.GetStream());
+                }
+
+            } catch (Exception exception) {
+                Log serverLog = new Log(exception.Message, LogType.ERROR);
+                this.triggerEvent(serverLog);
+            }
         }
 
+        protected virtual void Communicate (NetworkStream networkStream) {
+
+        }
 
     }
 }

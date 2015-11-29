@@ -47,6 +47,8 @@
     <Compile Include="Manufacturer.cs" />
     <Compile Include="Coordinate.cs" />
     <Compile Include="ITracker.cs" />
+    <Compile Include="Meitrack\Gm.cs" />
+    <Compile Include="Meitrack\GmException.cs" />
     <Compile Include="Meitrack\MeitrackGprsCommand.cs" />
     <Compile Include="Tracker.cs" />
     <Compile Include="Meitrack\Enum.cs" />

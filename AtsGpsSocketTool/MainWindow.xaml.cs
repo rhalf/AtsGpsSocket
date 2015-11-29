@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -46,10 +47,12 @@ namespace AtsGpsSocketTool {
                     meitrackTcpManager.DataReceived += MeitrackTcpManager_DataReceived;
                     meitrackTcpManager.Start();
 
-                    labelTcpClientCount.DataContext = meitrackTcpManager;
+                    groupTcpManager.DataContext = meitrackTcpManager;
 
                     button.Content = "Stop";
                 } else {
+                    groupTcpManager.DataContext = null;
+
                     meitrackTcpManager.Stop();
                     button.Content = "Start";
 
@@ -59,12 +62,12 @@ namespace AtsGpsSocketTool {
             }
 
         }
-        private void MeitrackTcpManager_DataReceived (Object sender, Byte[] data) {
+        private void MeitrackTcpManager_DataReceived (Object sender, object data) {
             try {
-          
-                MeitrackGprsCommand meitrackGprsCommand = MeitrackGprsCommand.Parse(data);
-
-
+                meitrackTcpManager.Refresh();
+                //MeitrackGprsCommand meitrackGprsCommand = MeitrackGprsCommand.Parse(data);
+                //AtsGps.Log log = new Log(ASCIIEncoding.UTF8.GetString(data).TrimEnd('\0'), LogType.CLIENT);
+                //display(log);
             } catch (Exception exception) {
                 Debug.Write(exception);
             }

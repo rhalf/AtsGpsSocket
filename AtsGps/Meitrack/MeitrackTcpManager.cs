@@ -7,63 +7,32 @@ namespace AtsGps.Meitrack {
         public MeitrackTcpManager () : base() { }
 
 
-        public override void threadTcpClientRun (object state) {
+        protected override void Communicate (NetworkStream networkStream) {
+            //------------------------------------------------Receive message
+            Byte[] bufferIn = new Byte[256];
+            Int32 count = networkStream.Read(bufferIn, 0, bufferIn.Length);
+
+            base.ReceiveBytes += count;
+
             try {
-                lock (this) {
-                    base.Connections = base.Connections + 1;
-                }
-                using (TcpClient tcpClient = (TcpClient)state) {
-                    //------------------------------------------------BeginLoop
-                    do {
-                        if (!tcpClient.Connected) {
-                            return;
-                        }
 
-                        NetworkStream networkStream;
+                Gm gm = new Gm();
+                gm.Parse(bufferIn);
+                base.triggerDataReceived(gm);
+                send(networkStream, new Byte[] { 0x90, 0x00, 0x0D, 0x0A });
 
-                        networkStream = tcpClient.GetStream();
-                        if (networkStream == null)
-                            throw new Exception("Network Stream is null.");
-                        //------------------------------------------------Receive message
-                        if (!networkStream.DataAvailable)
-                            continue;
-
-                        Byte[] bytesReceived = new Byte[256];
-                        Int32 index = networkStream.Read(bytesReceived, 0, bytesReceived.Length);
-                        if (index == 0)
-                            return;
-
-                        base.ReceiveBytes += index;
-
-                        Byte[] bytesExact = new Byte[index];
-                        Array.Copy(bytesReceived, bytesExact, index);
-                        base.triggerDataReceived(bytesExact);
-
-                        //------------------------------------------------Send message
-                        if (bytesReceived[0] == 13 && bytesReceived[1] == 10) {
-                            Array.Clear(bytesReceived, 0, bytesReceived.Length);
-                            continue;
-                        }
-                        String message = "OK";
-                        byte[] writeBytes = System.Text.Encoding.ASCII.GetBytes(message);
-                        networkStream.Write(writeBytes, 0, writeBytes.Length);
-
-
-                        networkStream.Close();
-                    } while (true);
-                    //------------------------------------------------EndLoop
-
-                }
-
-            } catch (Exception exception) {
-                Log serverLog = new Log(exception.Message, LogType.ERROR);
-                base.triggerEvent(serverLog);
-            } finally {
-                lock (this) {
-                    base.Connections = base.Connections - 1;
-                }
-
+            } catch (GmException gmException) {
+                send(networkStream,BitConverter.GetBytes(gmException.Code));
             }
+
+
+
+        }
+
+        private void send (NetworkStream networkStream, Byte[] bufferOut) {
+            //------------------------------------------------Send message
+            networkStream.Write(bufferOut, 0, bufferOut.Length);
+            networkStream.Flush();
         }
     }
 }
