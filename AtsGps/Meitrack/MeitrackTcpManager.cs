@@ -22,7 +22,9 @@ namespace AtsGps.Meitrack {
                 send(networkStream, new Byte[] { 0x90, 0x00, 0x0D, 0x0A });
 
             } catch (GmException gmException) {
-                send(networkStream,BitConverter.GetBytes(gmException.Code));
+                Byte[] code = BitConverter.GetBytes(gmException.Code);
+                Array.Reverse(code);
+                send(networkStream, code);
             }
 
 

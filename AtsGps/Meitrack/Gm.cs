@@ -22,7 +22,6 @@ namespace AtsGps.Meitrack {
 
                 if (bytesPacket[7].Equals("V")) {
                     throw new GmException(GmException.INVALID_GPS_DATA, bytesPacket[1]);
-
                 }
 
                 if (!Gm.CheckDataLength(stringPacket)) {

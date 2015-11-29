@@ -24,6 +24,7 @@ namespace AtsGps.Meitrack {
                     break;
             }
             this.Imei = imei;
+            this.Code = code;
         }
 
         public String Imei {
@@ -40,12 +41,12 @@ namespace AtsGps.Meitrack {
         }
 
 
-        public const Int32 WRONG_CHECKSUM = 0X6101;
-        public const Int32 WRONG_DATA_LENGTH = 0X6102;
-        public const Int32 WRONG_DATA_FORMAT= 0X6103;
+        public const Int32 WRONG_CHECKSUM = 0X61010D0A;
+        public const Int32 WRONG_DATA_LENGTH = 0X61020D0A;
+        public const Int32 WRONG_DATA_FORMAT= 0X61030D0A;
 
-        public const Int32 UNKNOWN_PROTOCOL = 0X6201;
-        public const Int32 INVALID_GPS_DATA = 0X6301;
+        public const Int32 UNKNOWN_PROTOCOL = 0X62010D0A;
+        public const Int32 INVALID_GPS_DATA = 0X63010D0A;
 
 
     }

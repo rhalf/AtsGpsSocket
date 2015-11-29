@@ -155,10 +155,6 @@ namespace AtsGps {
         }
         public void Start () {
             try {
-
-                ThreadPool.SetMaxThreads(100, 100);
-                ThreadPool.SetMinThreads(100, 100);
-
                 if (tcpListener == null) {
                     tcpListener = new TcpListener(this.ipAddress, this.port);
                 }
@@ -180,6 +176,8 @@ namespace AtsGps {
                 tcpListener = null;
             }
         }
+
+
         public void Stop () {
             try {
                 if (this.isActivated == true) {
