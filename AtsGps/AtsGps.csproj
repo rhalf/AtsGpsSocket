@@ -44,12 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Manufacturer.cs" />
+    <Compile Include="Device.cs" />
     <Compile Include="Coordinate.cs" />
     <Compile Include="ITracker.cs" />
     <Compile Include="Meitrack\Gm.cs" />
     <Compile Include="Meitrack\GmException.cs" />
     <Compile Include="Meitrack\MeitrackGprsCommand.cs" />
+    <Compile Include="TqatCommand.cs" />
+    <Compile Include="TqatCommandTcpManager.cs" />
     <Compile Include="Tracker.cs" />
     <Compile Include="Meitrack\Enum.cs" />
     <Compile Include="Meitrack\MeitrackTrackerCommand.cs" />

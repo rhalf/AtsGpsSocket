@@ -20,6 +20,8 @@ namespace AtsGpsSocketTool {
     public partial class MainWindow : Window {
 
         MeitrackTcpManager meitrackTcpManager;
+        TqatCommandTcpManager tqatCommandTcpManager;
+
 
         private ServerLogs serverLogs;
 
@@ -30,6 +32,7 @@ namespace AtsGpsSocketTool {
             try {
                 Dispatcher.Invoke(new Action(() => {
                     serverLogs.Add(log);
+                    dataGridServerLog.Items.Refresh();
                 }));
             } catch (Exception exception) {
                 Debug.Write(exception);
@@ -40,12 +43,14 @@ namespace AtsGpsSocketTool {
 
                 if (button.Content.ToString() == "Start") {
 
-                    meitrackTcpManager = new MeitrackTcpManager();
                     meitrackTcpManager.IpAddress = IPAddress.Parse(comboBoxIp.Text);
                     meitrackTcpManager.Port = Int32.Parse(textBoxPort.Text);
-                    meitrackTcpManager.Event += MeitrackTcpManager_Event;
-                    meitrackTcpManager.DataReceived += MeitrackTcpManager_DataReceived;
                     meitrackTcpManager.Start();
+
+                    tqatCommandTcpManager.IpAddress = IPAddress.Parse(comboBoxIp.Text);
+                    tqatCommandTcpManager.Port = 8001;
+                    tqatCommandTcpManager.Start();
+
 
                     groupTcpManager.DataContext = meitrackTcpManager;
 
@@ -54,6 +59,8 @@ namespace AtsGpsSocketTool {
                     groupTcpManager.DataContext = null;
 
                     meitrackTcpManager.Stop();
+                    tqatCommandTcpManager.Stop();
+
                     button.Content = "Start";
 
                 }
@@ -62,12 +69,23 @@ namespace AtsGpsSocketTool {
             }
 
         }
+
+        private void TqatCommandTcpManager_DataReceived (object sender, object data) {
+            TqatCommand tqatCommand = (TqatCommand)data;
+            AtsGps.Log log = new Log(tqatCommand.Imei + ":" + tqatCommand.Command, LogType.CLIENT);
+            display(log);
+        }
+
+        private void TqatCommandTcpManager_Event (object sender, Log log) {
+            display(log);
+        }
+
         private void MeitrackTcpManager_DataReceived (Object sender, object data) {
             try {
                 meitrackTcpManager.Refresh();
-                //MeitrackGprsCommand meitrackGprsCommand = MeitrackGprsCommand.Parse(data);
-                //AtsGps.Log log = new Log(ASCIIEncoding.UTF8.GetString(data).TrimEnd('\0'), LogType.CLIENT);
-                //display(log);
+                //MeitrackGprsCommand meitrackgprscommand = MeitrackGprsCommand.Parse(data);
+                AtsGps.Log log = new Log(ASCIIEncoding.UTF8.GetString((Byte[])data).TrimEnd('\0'), LogType.CLIENT);
+                display(log);
             } catch (Exception exception) {
                 Debug.Write(exception);
             }
@@ -103,6 +121,13 @@ namespace AtsGpsSocketTool {
                 }
             }
 
+            meitrackTcpManager = new MeitrackTcpManager();
+            meitrackTcpManager.Event += MeitrackTcpManager_Event;
+            meitrackTcpManager.DataReceived += MeitrackTcpManager_DataReceived;
+
+            tqatCommandTcpManager = new TqatCommandTcpManager();
+            tqatCommandTcpManager.Event += TqatCommandTcpManager_Event; ;
+            tqatCommandTcpManager.DataReceived += TqatCommandTcpManager_DataReceived;
 
         }
 

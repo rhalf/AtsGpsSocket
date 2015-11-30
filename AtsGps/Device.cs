@@ -7,7 +7,7 @@ using System.Text;
 namespace AtsGps {
 
  
-    public class Manufacturer : INotifyPropertyChanged {
+    public class Device : INotifyPropertyChanged {
         //----------------------------------------------Events
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged (String propertyName) {
@@ -18,7 +18,7 @@ namespace AtsGps {
         //----------------------------------------------Initialize
         private String name;
         private List<String> devices;
-        private String device;
+        private String company;
         //----------------------------------------------Getter/Setter
         public String Name {
             get {
@@ -29,13 +29,13 @@ namespace AtsGps {
                 OnPropertyChanged("Name");
             }
         }
-        public String Device {
+        public String Company {
             get {
-                return device;
+                return company;
             }
             set {
-                device = value;
-                OnPropertyChanged("Device");
+                company = value;
+                OnPropertyChanged("Company");
             }
         }
         public List<String> Devices {
@@ -49,10 +49,9 @@ namespace AtsGps {
         }
         //----------------------------------------------Function
         public override string ToString () {
-            return this.Name + " - " + this.Device;
+            String stringName = this.Company + "_" + this.Name;
+            return stringName.ToLower();
         }
-
-
     }
 
 

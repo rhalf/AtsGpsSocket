@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 
-namespace AtsGps.Meitrack {
-    public class MeitrackTcpManager : TcpManager {
-        public MeitrackTcpManager () : base() { }
+namespace AtsGps {
+    public class TqatCommandTcpManager : TcpManager {
+        public TqatCommandTcpManager () : base() {
 
+        }
 
         protected override void Communicate (NetworkStream networkStream) {
             try {
@@ -15,19 +18,15 @@ namespace AtsGps.Meitrack {
 
                 base.ReceiveBytes += count;
 
-                Gm gm = new Gm();
-                gm.Parse(bufferIn);
-                base.triggerDataReceived(gm);
+                TqatCommand tqatCommand = new TqatCommand();
+                tqatCommand.Parse(bufferIn);
+                base.triggerDataReceived(tqatCommand);
                 send(networkStream, new Byte[] { 0x90, 0x00, 0x0D, 0x0A });
-            } catch (GmException gmException) {
-                Byte[] code = BitConverter.GetBytes(gmException.Code);
-                Array.Reverse(code);
-                send(networkStream, code);
             } catch (Exception exception) {
-            } finally {
-                networkStream.Dispose();
+                send(networkStream, new Byte[] { 0x60, 0x00, 0x0D, 0x0A });
             }
         }
+
         private void send (NetworkStream networkStream, Byte[] bufferOut) {
             //------------------------------------------------Send message
             networkStream.Write(bufferOut, 0, bufferOut.Length);

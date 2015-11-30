@@ -31,47 +31,16 @@
                 <TabItem Header="ServerLogs">
                     <DataGrid Name="dataGridServerLog" AutoGenerateColumns="True" ></DataGrid>
                 </TabItem>
-                <TabItem Header="Mvt100 Log">
-                    <ListView Name="listViewMvt100">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding DateTime}">
-                                    <GridViewColumn.Header>
-                                        <GridViewColumnHeader>DateTime</GridViewColumnHeader>
-                                    </GridViewColumn.Header>
-                                </GridViewColumn>
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Description}">
-                                    <GridViewColumn.Header>
-                                        <GridViewColumnHeader>Description</GridViewColumnHeader>
-                                    </GridViewColumn.Header>
-                                </GridViewColumn>
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Description}">
-                                    <GridViewColumn.Header>
-                                        <GridViewColumnHeader>Description</GridViewColumnHeader>
-                                    </GridViewColumn.Header>
-                                </GridViewColumn>
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding LogType}">
-                                    <GridViewColumn.Header>
-                                        <GridViewColumnHeader>Status</GridViewColumnHeader>
-                                    </GridViewColumn.Header>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </TabItem>
+             
             </TabControl>
         </Grid>
         <GroupBox  Grid.Row="2"   Name="groupTcpManager">
             <StackPanel Orientation="Horizontal" >
                 <Label Content="Packets" Width="60"></Label>
                 <Label  Content="{Binding Packets, Mode=OneWay}" Width="95"></Label>
-                <Label Content="In" Width="60"></Label>
-                <Label  Content="{Binding BufferIn.Count, Mode=OneWay}" Width="95"></Label>
-                <Label Content="Out" Width="60"></Label>
-                <Label  Content="{Binding BufferOut.Count, Mode=OneWay}" Width="95"></Label>
-                <Label Content="Send" Width="60"></Label>
                 <Label Content="Receive" Width="60"></Label>
                 <Label  Content="{Binding ReceiveBytes, Mode=OneWay}" Width="95"></Label>
+                <Label Content="Send" Width="60"></Label>
                 <Label  Content="{Binding SendBytes}" Width="90"></Label>
                 <Button Content="Clear" Click="buttonClearServerLog_Click" Margin="5" Width="75"></Button>
             </StackPanel>
