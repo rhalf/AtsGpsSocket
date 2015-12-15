@@ -49,6 +49,7 @@
     <Compile Include="ITracker.cs" />
     <Compile Include="Meitrack\Gm.cs" />
     <Compile Include="Meitrack\GmException.cs" />
+    <Compile Include="Meitrack\Meitrack.cs" />
     <Compile Include="Meitrack\MeitrackGprsCommand.cs" />
     <Compile Include="TqatCommand.cs" />
     <Compile Include="TqatCommandTcpManager.cs" />
@@ -56,7 +57,6 @@
     <Compile Include="Meitrack\Enum.cs" />
     <Compile Include="Meitrack\MeitrackTrackerCommand.cs" />
     <Compile Include="Meitrack\MeitrackTcpManager.cs" />
-    <Compile Include="Meitrack\Mvt100.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerLog.cs" />
     <Compile Include="TcpManager.cs" />

@@ -10,7 +10,8 @@ namespace AtsGps {
 
         }
 
-        protected override void Communicate (NetworkStream networkStream) {
+        protected override void Communicate (TcpClient tcpClient) {
+            NetworkStream networkStream = tcpClient.GetStream();
             try {
                 //------------------------------------------------Receive message
                 Byte[] bufferIn = new Byte[256];
@@ -18,10 +19,9 @@ namespace AtsGps {
 
                 base.ReceiveBytes += count;
 
-                TqatCommand tqatCommand = new TqatCommand();
-                tqatCommand.Parse(bufferIn);
-                base.triggerDataReceived(tqatCommand);
-                send(networkStream, new Byte[] { 0x90, 0x00, 0x0D, 0x0A });
+                String[] command = ASCIIEncoding.UTF8.GetString(bufferIn, 0, count).Split(' ');
+                base.triggerDataReceived(command);
+
             } catch (Exception exception) {
                 send(networkStream, new Byte[] { 0x60, 0x00, 0x0D, 0x0A });
             }

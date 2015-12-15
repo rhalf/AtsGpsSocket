@@ -14,3 +14,4 @@ C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\x64\Debug\AtsG
 C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\x64\Debug\AtsGpsSocketTool.csproj.GenerateResource.Cache
 C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\x64\Debug\AtsGpsSocketTool.exe
 C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\x64\Debug\AtsGpsSocketTool.pdb
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\bin\x64\Debug\System.Net.Http.xml

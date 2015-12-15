@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
@@ -36,85 +37,146 @@ namespace AtsGps {
         private TcpListener tcpListener;
         private IPAddress ipAddress;
         private Int32 port = 0;
-        //private Thread threadTcpListener;
         private Int32 packets = 0;
         private Int64 sendBytes = 0;
         private Int64 receiveBytes = 0;
         private Boolean isEnabled;
         private Boolean isActivated;
+        private ConcurrentDictionary<String, String[]> bufferOut;
+        private ConcurrentQueue<Object> bufferIn;
+        private ObservableCollection<TcpClient> tcpClient;
         //----------------------------------------------Getter/Setter
-        public Int32 Id {
-            get;
-            set;
-        }
-        public Device Device {
+        //public Int32 Id {
+        //    get;
+        //    set;
+        //}
+        public Device Device
+        {
             get { return device; }
-            set {
+            set
+            {
                 device = value;
                 OnPropertyChanged("Manufacturer");
             }
         }
-        public Int32 Packets {
-            get {
+        public Int32 Packets
+        {
+            get
+            {
                 return packets;
             }
-            set {
+            set
+            {
                 packets = value;
                 OnPropertyChanged("Packets");
             }
         }
-        public IPAddress IpAddress {
-            get {
+        public IPAddress IpAddress
+        {
+            get
+            {
                 return ipAddress;
             }
-            set {
+            set
+            {
                 ipAddress = value;
                 OnPropertyChanged("IpAddress");
             }
         }
-        public Int32 Port {
-            get {
+        public Int32 Port
+        {
+            get
+            {
                 return port;
             }
-            set {
+            set
+            {
                 port = value;
                 OnPropertyChanged("Port");
             }
         }
-        public Int64 SendBytes {
-            get {
+        public Int64 SendBytes
+        {
+            get
+            {
                 return sendBytes;
             }
-            set {
+            set
+            {
                 sendBytes = value;
                 OnPropertyChanged("SendBytes");
             }
         }
-        public Int64 ReceiveBytes {
-            get {
+        public Int64 ReceiveBytes
+        {
+            get
+            {
                 return receiveBytes;
             }
-            set {
+            set
+            {
                 receiveBytes = value;
                 OnPropertyChanged("ReceiveBytes");
             }
         }
-        public Boolean IsEnabled {
-            get {
+        public Boolean IsEnabled
+        {
+            get
+            {
                 return isEnabled;
             }
-            set {
+            set
+            {
                 isEnabled = value;
                 OnPropertyChanged("IsEnabled");
             }
         }
-        public Boolean IsActivated {
-            get {
+        public Boolean IsActivated
+        {
+            get
+            {
                 return isActivated;
             }
-            set {
+            set
+            {
                 isActivated = value;
                 OnPropertyChanged("IsActivated");
+            }
+        }
+        public ConcurrentDictionary<String, String[]> BufferOut
+        {
+            get
+            {
+                return bufferOut;
+            }
+            set
+            {
+                bufferOut = value;
+                OnPropertyChanged("BufferOut");
+            }
+        }
+        public ConcurrentQueue<Object> BufferIn
+        {
+            get
+            {
+                return bufferIn;
+            }
+            set
+            {
+                bufferIn = value;
+                OnPropertyChanged("BufferIn");
+            }
+        }
+        public ObservableCollection<TcpClient> TcpClient
+        {
+            get
+            {
+                return tcpClient;
+            }
+            set
+            {
+                tcpClient = value;
+                OnPropertyChanged("TcpClient");
             }
         }
         //----------------------------------------------Functions
@@ -130,23 +192,19 @@ namespace AtsGps {
         //}
         public TcpManager () {
             try {
-           
+
             } catch (Exception exception) {
                 throw exception;
             }
         }
         public void Start () {
             try {
+                this.TcpClient = new ObservableCollection<System.Net.Sockets.TcpClient>();
                 if (tcpListener == null) {
                     tcpListener = new TcpListener(this.ipAddress, this.port);
                 }
                 tcpListener.Start();
                 tcpListener.BeginAcceptTcpClient(new AsyncCallback(asyncBeginAccept), tcpListener);
-
-                //if (threadTcpListener == null) {
-                //    threadTcpListener = new Thread(threadTcpListenerRun);
-                //    threadTcpListener.Start(tcpListener);
-                //}
 
                 this.isActivated = true;
                 Log serverLog = new Log("Server starts..", LogType.RUNNING);
@@ -155,8 +213,12 @@ namespace AtsGps {
                 this.isActivated = false;
                 Log serverLog = new Log(exception.Message, LogType.ERROR);
                 Event(this, serverLog);
-                tcpListener.Stop();
-                tcpListener = null;
+
+                if (tcpListener != null) {
+                    tcpListener.Stop();
+                    tcpListener = null;
+                }
+               
             }
         }
         public void Stop () {
@@ -182,25 +244,29 @@ namespace AtsGps {
             OnPropertyChanged("ReceiveBytes");
             OnPropertyChanged("BufferIn");
             OnPropertyChanged("BufferOut");
+            OnPropertyChanged("TcpClient");
         }
 
         #region Asynchronous methods
         private void asyncBeginAccept (IAsyncResult iAsyncResult) {
-            try {
+            TcpListener tcpListener = (TcpListener)iAsyncResult.AsyncState;
+            TcpClient tcpClient;
 
-                TcpListener tcpListener = (TcpListener)iAsyncResult.AsyncState;
-                using (TcpClient tcpClient = tcpListener.EndAcceptTcpClient(iAsyncResult)) {
-                    this.Packets++;
-                    this.Communicate(tcpClient.GetStream());
-                    tcpListener.BeginAcceptTcpClient(new AsyncCallback(asyncBeginAccept), tcpListener);
-                }
+            try {
+                tcpClient = tcpListener.EndAcceptTcpClient(iAsyncResult);
+                Task.Factory.StartNew(() => {
+                    this.Communicate(tcpClient);
+                });
+                tcpListener.BeginAcceptTcpClient(new AsyncCallback(asyncBeginAccept), tcpListener);
+
             } catch (Exception exception) {
 
             } finally {
-
             }
 
         }
+
+  
         #endregion
 
         //private void threadTcpListenerRun (object state) {
@@ -233,7 +299,7 @@ namespace AtsGps {
         //    }
         //}
 
-        protected virtual void Communicate (NetworkStream networkStream) {
+        protected virtual void Communicate (TcpClient tcpClient) {
             throw new NotImplementedException();
         }
 

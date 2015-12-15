@@ -49,7 +49,7 @@ namespace AtsGps {
         }
         //----------------------------------------------Function
         public override string ToString () {
-            String stringName = this.Company + "_" + this.Name;
+            String stringName = this.Company + " " + this.Name;
             return stringName.ToLower();
         }
     }
