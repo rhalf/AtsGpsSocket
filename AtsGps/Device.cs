@@ -49,8 +49,8 @@ namespace AtsGps {
         }
         //----------------------------------------------Function
         public override string ToString () {
-            String stringName = this.Company + " " + this.Name;
-            return stringName.ToLower();
+            String stringName = this.Company + "|" + this.Name;
+            return stringName;
         }
     }
 

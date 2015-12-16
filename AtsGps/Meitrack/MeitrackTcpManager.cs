@@ -9,12 +9,6 @@ namespace AtsGps.Meitrack {
 
 
         protected override void Communicate (TcpClient tcpClient) {
-
-            lock (base.TcpClient) {
-                base.TcpClient.Add(tcpClient);
-            }
-         
-
             try {
                 while (tcpClient.Connected) {
                     NetworkStream networkStream = tcpClient.GetStream();
@@ -42,7 +36,7 @@ namespace AtsGps.Meitrack {
                                 }
                             }
                         }
-                
+
                     }
                 }
             } catch (GmException gmException) {
@@ -50,11 +44,7 @@ namespace AtsGps.Meitrack {
             } catch (Exception exception) {
                 Debug.Write(exception.Message);
             } finally {
-               
-            }
-        
-            lock (base.TcpClient) {
-                base.TcpClient.Remove(tcpClient);
+
             }
         }
         private void send (NetworkStream networkStream, Byte[] bufferOut) {

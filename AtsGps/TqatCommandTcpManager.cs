@@ -16,7 +16,7 @@ namespace AtsGps {
                 //------------------------------------------------Receive message
                 Byte[] bufferIn = new Byte[256];
                 Int32 count = networkStream.Read(bufferIn, 0, bufferIn.Length);
-
+                base.Packets++;
                 base.ReceiveBytes += count;
 
                 String[] command = ASCIIEncoding.UTF8.GetString(bufferIn, 0, count).Split(' ');
@@ -26,6 +26,7 @@ namespace AtsGps {
                 send(networkStream, new Byte[] { 0x60, 0x00, 0x0D, 0x0A });
             }
         }
+
 
         private void send (NetworkStream networkStream, Byte[] bufferOut) {
             //------------------------------------------------Send message

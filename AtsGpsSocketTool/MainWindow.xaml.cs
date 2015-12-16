@@ -112,11 +112,11 @@ namespace AtsGpsSocketTool {
 
                 if (button.Content.ToString() == "Start") {
 
-                    meitrackTcpManager.IpAddress = IPAddress.Parse(comboBoxIp.Text);
+                    meitrackTcpManager.IpAddress = comboBoxIp.Text;
                     meitrackTcpManager.Port = Int32.Parse(textBoxPort.Text);
                     meitrackTcpManager.Start();
 
-                    tqatCommandTcpManager.IpAddress = IPAddress.Parse(comboBoxIp.Text);
+                    tqatCommandTcpManager.IpAddress = comboBoxIp.Text;
                     tqatCommandTcpManager.Port = 8001;
                     tqatCommandTcpManager.Start();
 
