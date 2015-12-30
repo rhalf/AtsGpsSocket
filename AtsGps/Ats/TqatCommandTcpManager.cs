@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 
-namespace AtsGps {
+namespace AtsGps.Ats {
     public class TqatCommandTcpManager : TcpManager {
         public TqatCommandTcpManager () : base() {
 
@@ -19,11 +19,17 @@ namespace AtsGps {
                 base.Packets++;
                 base.ReceiveBytes += count;
 
-                String[] command = ASCIIEncoding.UTF8.GetString(bufferIn, 0, count).Split(' ');
+                String data = ASCIIEncoding.UTF8.GetString(bufferIn, 0, count).TrimEnd();
+                String[] command = data.Split(' ');
                 base.triggerDataReceived(command);
+
+             
 
             } catch (Exception exception) {
                 send(networkStream, new Byte[] { 0x60, 0x00, 0x0D, 0x0A });
+                triggerEvent(new Log(exception.Message, LogType.COMMAND));
+            } finally {
+                tcpClient.Close();
             }
         }
 

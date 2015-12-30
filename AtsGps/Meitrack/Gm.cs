@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace AtsGps.Meitrack {
     public class Gm {
-
+        public String Identifier
+        {
+            get;
+            set;
+        }
         public String Raw {
             get;
             set;

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AtsGps.Meitrack {
     public class Meitrack {
-        public static Gm ParseGm (byte[] raw) {
+        public static bool ParseGm (byte[] raw, out Gm gm) {
             if (raw[0] == '$' && raw[1] == '$') {
                 #region Validate
                 //Device    1           2   3       4       5           6       7  8 9 10 11 12  13  14         15          16         17           18                19    20
@@ -17,7 +17,7 @@ namespace AtsGps.Meitrack {
                 String stringPacket = ASCIIEncoding.UTF8.GetString(raw).Trim('\0');
                 String[] stringPackets = stringPacket.Split(',');
 
-                Gm gm = new Gm();
+                gm = new Gm();
                 gm.Raw = stringPacket;
 
                 stringPacket.Substring(0, stringPacket.Length - 2);
@@ -34,6 +34,12 @@ namespace AtsGps.Meitrack {
                 try {
 
                     gm.Unit = stringPackets[1];
+                    gm.Identifier = stringPacket.Substring(2,1);
+
+                    if(stringPackets[3].Contains("OK")) {
+                        return false;
+                    }
+
                     gm.TimeStamp = Gm.toUnixTimestamp(stringPackets[6]).ToString();
                     gm.Latitude = stringPackets[4];
                     gm.Longitude = stringPackets[5];
@@ -103,9 +109,9 @@ namespace AtsGps.Meitrack {
 
                     gm.Data = sb.ToString();
                     gm.LastTime = "0";
-                    return gm;
+                    return true;
                 } catch {
-                    return gm;
+                    return false;
                 }
             } else {
                 throw new GmException(GmException.UNKNOWN_PROTOCOL, "None", raw);
@@ -125,14 +131,15 @@ namespace AtsGps.Meitrack {
                 throw exception;
             }
         }
-        public static String GenerateCommand (String[] command) {
+        public static String GenerateCommand (String[] command, String identifier) {
             String data = "";
-            for (int index = 0; index < +command.Length; index++) {
+            for (int index = 0; index < command.Length; index++) {
                 data += "," + command[index];
             }
             data += "*";
-            int length = data.Length;
-            data = "@@M" + length.ToString() + data;
+           
+            int length = data.Length + 2 + 2;
+            data = "@@" + identifier + length.ToString() + data;
             data += GetCheckSum(data) + "\r\n";
             return data;
         }

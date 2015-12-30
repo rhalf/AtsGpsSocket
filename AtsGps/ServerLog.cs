@@ -8,12 +8,10 @@ namespace AtsGps {
 
     public enum LogType {
         SERVER,
-        CLIENT,
-        ERROR,
-        WARNING,
-        RUNNING,
-        STOP,
-        INCOMING_DATA
+        COMMAND,
+        MVT100,
+        T1,
+        FM110
     }
 
     public class Log {

@@ -51,8 +51,9 @@
     <Compile Include="Meitrack\GmException.cs" />
     <Compile Include="Meitrack\Meitrack.cs" />
     <Compile Include="Meitrack\MeitrackGprsCommand.cs" />
+    <Compile Include="TcpTracker.cs" />
     <Compile Include="TqatCommand.cs" />
-    <Compile Include="TqatCommandTcpManager.cs" />
+    <Compile Include="Ats\TqatCommandTcpManager.cs" />
     <Compile Include="Tracker.cs" />
     <Compile Include="Meitrack\Enum.cs" />
     <Compile Include="Meitrack\MeitrackTrackerCommand.cs" />

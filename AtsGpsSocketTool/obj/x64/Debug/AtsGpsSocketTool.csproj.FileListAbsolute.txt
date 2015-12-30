@@ -4,6 +4,7 @@ C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\bin\x64\Debug\AtsG
 C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\bin\x64\Debug\AtsGps.dll
 C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\bin\x64\Debug\System.Net.Http.dll
 C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\bin\x64\Debug\AtsGps.pdb
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\bin\x64\Debug\System.Net.Http.xml
 C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\x64\Debug\AtsGpsSocketTool.csprojResolveAssemblyReference.cache
 C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\x64\Debug\MainWindow.baml
 C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\x64\Debug\MainWindow.g.cs
@@ -14,4 +15,3 @@ C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\x64\Debug\AtsG
 C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\x64\Debug\AtsGpsSocketTool.csproj.GenerateResource.Cache
 C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\x64\Debug\AtsGpsSocketTool.exe
 C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\x64\Debug\AtsGpsSocketTool.pdb
-C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\bin\x64\Debug\System.Net.Http.xml

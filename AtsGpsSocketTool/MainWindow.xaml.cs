@@ -1,5 +1,7 @@
 ﻿using AtsGps;
 using AtsGps.Meitrack;
+using AtsGps.Ats;
+
 
 using System;
 using System.Collections.Concurrent;
@@ -39,7 +41,7 @@ namespace AtsGpsSocketTool {
   
         private void TqatCommandTcpManager_DataReceived (object sender, object data) {
             String[] command = (String[]) data;
-            AtsGps.Log log = new Log(command[0] + ":" + command[1], LogType.CLIENT);
+            AtsGps.Log log = new Log(command[0] + ":" + command[1], LogType.COMMAND);
             commands.TryAdd(command[0], command);
             display(log);
         }
@@ -50,8 +52,8 @@ namespace AtsGpsSocketTool {
             try {
                 meitrackTcpManager.Refresh();
                 Gm gm = (Gm)data;
-                AtsGps.Log log = new Log(gm.Raw, LogType.CLIENT);
-                display(log);
+                //AtsGps.Log log = new Log(gm.Raw, LogType.MVT100);
+                //display(log);
             } catch (Exception exception) {
                 MessageBox.Show(exception.Message);
             }
@@ -115,10 +117,11 @@ namespace AtsGpsSocketTool {
                     meitrackTcpManager.IpAddress = comboBoxIp.Text;
                     meitrackTcpManager.Port = Int32.Parse(textBoxPort.Text);
                     meitrackTcpManager.Start();
+                    meitrackTcpManager.TcpTrackers = new ConcurrentDictionary<string, TcpTracker>();
 
-                    tqatCommandTcpManager.IpAddress = comboBoxIp.Text;
-                    tqatCommandTcpManager.Port = 8001;
-                    tqatCommandTcpManager.Start();
+                    //tqatCommandTcpManager.IpAddress = comboBoxIp.Text;
+                    //tqatCommandTcpManager.Port = 8001;
+                    //tqatCommandTcpManager.Start();
 
 
                     groupTcpManager.DataContext = meitrackTcpManager;
@@ -128,6 +131,7 @@ namespace AtsGpsSocketTool {
                     groupTcpManager.DataContext = null;
 
                     meitrackTcpManager.Stop();
+
                     tqatCommandTcpManager.Stop();
 
                     button.Content = "Start";
