@@ -44,14 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ats\Gm.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="Coordinate.cs" />
     <Compile Include="ITracker.cs" />
-    <Compile Include="Meitrack\Gm.cs" />
-    <Compile Include="Meitrack\GmException.cs" />
+    <Compile Include="Ats\GmException.cs" />
     <Compile Include="Meitrack\Meitrack.cs" />
     <Compile Include="Meitrack\MeitrackGprsCommand.cs" />
     <Compile Include="TcpTracker.cs" />
+    <Compile Include="TcpClients.cs" />
+    <Compile Include="Teltonika\Io.cs" />
+    <Compile Include="Teltonika\Teltonika.cs" />
+    <Compile Include="Teltonika\TeltonikaTcpManager.cs" />
     <Compile Include="TqatCommand.cs" />
     <Compile Include="Ats\TqatCommandTcpManager.cs" />
     <Compile Include="Tracker.cs" />

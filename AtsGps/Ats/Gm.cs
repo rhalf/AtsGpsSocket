@@ -2,53 +2,62 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace AtsGps.Meitrack {
+namespace AtsGps.Ats {
     public class Gm {
         public String Identifier
         {
             get;
             set;
         }
-        public String Raw {
+        public String Raw
+        {
             get;
             set;
         }
-        public String Unit {
+        public String Unit
+        {
             get;
             set;
         }
-        public String TimeStamp {
+        public String TimeStamp
+        {
             get;
             set;
         }
-        public String Latitude {
+        public String Latitude
+        {
             get;
             set;
         }
-        public String Longitude {
+        public String Longitude
+        {
             get;
             set;
         }
 
-        public String Speed {
+        public String Speed
+        {
             get;
             set;
         }
-        public String Orientation {
+        public String Orientation
+        {
             get;
             set;
         }
-        public String Mileage {
+        public String Mileage
+        {
             get;
             set;
         }
-        public String Data {
+        public String Data
+        {
             get;
             set;
         }
-        public String LastTime {
+        public String LastTime
+        {
             get;
             set;
 
@@ -89,6 +98,5 @@ namespace AtsGps.Meitrack {
 
             return (long)epoch;
         }
-     
     }
 }

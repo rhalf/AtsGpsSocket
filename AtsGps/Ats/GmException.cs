@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AtsGps.Meitrack {
+namespace AtsGps.Ats {
 
 
     public class GmException : Exception {

@@ -23,7 +23,7 @@
             </Grid.ColumnDefinitions>
             <Button x:Name="button" Grid.Column="0" Content="Start" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"  Click="button_Click"  Margin="5"/>
             <ComboBox x:Name="comboBoxIp" Grid.Column="1" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="5"/>
-            <TextBox x:Name="textBoxPort"  Grid.Column="2" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" TextWrapping="Wrap" Text="8887" Margin="5"/>
+            <TextBox x:Name="textBoxPort"  Grid.Column="2" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" TextWrapping="Wrap" Text="50010" Margin="10,5,0,5"/>
         </Grid>
 
         <Grid Grid.Row="1">
@@ -61,8 +61,10 @@
             <StackPanel Orientation="Horizontal" >
                 <Label Content="Packets" Width="60"></Label>
                 <Label  Content="{Binding Packets, Mode=OneWay}" Width="95"></Label>
-                <Label Content="TcpClient" Width="60"></Label>
-                <Label  Content="{Binding TcpClient.Count, Mode=OneWay}" Width="95"></Label>
+                <Label Content="TcpClients" Width="60"></Label>
+                <Label  Content="{Binding TcpClients.Count, Mode=OneWay}" Width="95"></Label>
+                <Label Content="Trackers" Width="60"></Label>
+                <Label  Content="{Binding TcpClients.TrackersCount, Mode=OneWay}" Width="95"></Label>
                 <Label Content="Receive" Width="60"></Label>
                 <Label  Content="{Binding ReceiveBytes, Mode=OneWay}" Width="95"></Label>
                 <Label Content="Send" Width="60"></Label>

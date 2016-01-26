@@ -13,8 +13,8 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-
-
+using System.Collections.Generic;
+using AtsGps.Teltonika;
 
 namespace AtsGpsSocketTool {
     /// <summary>
@@ -38,7 +38,6 @@ namespace AtsGpsSocketTool {
                 Debug.Write(exception);
             }
         }
-  
         private void TqatCommandTcpManager_DataReceived (object sender, object data) {
             String[] command = (String[]) data;
             AtsGps.Log log = new Log(command[0] + ":" + command[1], LogType.COMMAND);
@@ -61,8 +60,6 @@ namespace AtsGpsSocketTool {
         private void MeitrackTcpManager_Event (Object sender, Log log) {
             display(log);
         }
-
-
         private void Window_Closing (object sender, System.ComponentModel.CancelEventArgs e) {
             try {
                 if (meitrackTcpManager == null)
@@ -100,7 +97,6 @@ namespace AtsGpsSocketTool {
             tqatCommandTcpManager.DataReceived += TqatCommandTcpManager_DataReceived;
             
         }
-
         private void buttonClearServerLog_Click (object sender, RoutedEventArgs e) {
             dataGridServerLog.Items.Clear();
         }
@@ -117,7 +113,7 @@ namespace AtsGpsSocketTool {
                     meitrackTcpManager.IpAddress = comboBoxIp.Text;
                     meitrackTcpManager.Port = Int32.Parse(textBoxPort.Text);
                     meitrackTcpManager.Start();
-                    meitrackTcpManager.TcpTrackers = new ConcurrentDictionary<string, TcpTracker>();
+                    meitrackTcpManager.TcpClients = new TcpClients();
 
                     //tqatCommandTcpManager.IpAddress = comboBoxIp.Text;
                     //tqatCommandTcpManager.Port = 8001;

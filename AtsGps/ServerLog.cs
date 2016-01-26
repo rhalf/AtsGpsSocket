@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 namespace AtsGps {
 
     public enum LogType {
+        SERVER_BEGINACCEPT,
+        SERVER_COMMUNICATE,
         SERVER,
         COMMAND,
         MVT100,
         T1,
-        FM110
+        FM1100
     }
 
     public class Log {

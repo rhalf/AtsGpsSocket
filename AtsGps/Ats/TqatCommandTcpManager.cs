@@ -10,14 +10,15 @@ namespace AtsGps.Ats {
 
         }
 
-        protected override void Communicate (TcpClient tcpClient) {
+        protected override void Communicate (TcpTracker tcpTracker) {
+            TcpClient tcpClient = tcpTracker.TcpClient;
             NetworkStream networkStream = tcpClient.GetStream();
             try {
                 //------------------------------------------------Receive message
                 Byte[] bufferIn = new Byte[256];
                 Int32 count = networkStream.Read(bufferIn, 0, bufferIn.Length);
-                base.Packets++;
-                base.ReceiveBytes += count;
+                base.PacketReceived++;
+                base.ByteReceived += count;
 
                 String data = ASCIIEncoding.UTF8.GetString(bufferIn, 0, count).TrimEnd();
                 String[] command = data.Split(' ');
@@ -38,7 +39,7 @@ namespace AtsGps.Ats {
             //------------------------------------------------Send message
             networkStream.Write(bufferOut, 0, bufferOut.Length);
             networkStream.Flush();
-            base.SendBytes += bufferOut.Length;
+            base.ByteSent += bufferOut.Length;
         }
     }
 }

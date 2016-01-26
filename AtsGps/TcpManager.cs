@@ -22,11 +22,10 @@ namespace AtsGps {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-
         public delegate void EventHandler (Object sender, Log log);
         public event EventHandler Event;
         protected void triggerEvent (Log log) {
-            if (this.Event!= null) {
+            if (this.Event != null) {
                 this.Event(this, log);
             }
         }
@@ -40,6 +39,7 @@ namespace AtsGps {
         //----------------------------------------------Initialized
         //private Device device;
         private TcpListener tcpListener;
+
         //private IPAddress ipAddress;
         //private Int32 port = 0;
         //private Int32 packets = 0;
@@ -51,19 +51,22 @@ namespace AtsGps {
         //private ConcurrentQueue<Object> bufferIn;
         //private List<TcpClient> tcpClient;
         //----------------------------------------------Getter/Setter
-        //public Int32 Id {
-        //    get;
-        //    set;
-        //}
-
-
-
+        public Int64 Id
+        {
+            get;
+            set;
+        }
         public Device Device
         {
             get;
             set;
         }
-        public Int32 Packets
+        public long PacketReceived
+        {
+            get;
+            set;
+        }
+        public long PacketSent
         {
             get;
             set;
@@ -78,12 +81,12 @@ namespace AtsGps {
             get;
             set;
         }
-        public Int64 SendBytes
+        public long ByteSent
         {
             get;
             set;
         }
-        public Int64 ReceiveBytes
+        public long ByteReceived
         {
             get;
             set;
@@ -108,28 +111,22 @@ namespace AtsGps {
             get;
             set;
         }
-
-        public List<TcpClient> TcpClients
+        public TcpClients TcpClients
         {
             get;
             set;
         }
-        public ConcurrentDictionary<String, TcpTracker> TcpTrackers
-        {
-            get;
-            set;
-        }
-
         public TcpManager () {
         }
         public void Start () {
             try {
-                this.TcpClients = new List<TcpClient>();
-               
+                this.Id = 0;
+                this.TcpClients = new TcpClients();
 
                 if (tcpListener == null) {
-                    tcpListener = new TcpListener(IPAddress.Parse(this.IpAddress), this.Port);
+                    tcpListener = new TcpListener(new  IPEndPoint(IPAddress.Parse(this.IpAddress), this.Port));
                 }
+
                 tcpListener.Start();
                 tcpListener.BeginAcceptTcpClient(new AsyncCallback(asyncBeginAccept), tcpListener);
 
@@ -142,8 +139,7 @@ namespace AtsGps {
                 Event(this, serverLog);
 
                 if (tcpListener != null) {
-                    tcpListener.Stop();
-                    tcpListener = null;
+                    this.Stop();
                 }
                 triggerEvent(new Log(exception.Message, LogType.SERVER));
                 throw exception;
@@ -152,15 +148,18 @@ namespace AtsGps {
         public void Stop () {
             Log serverLog;
             try {
+                tcpListener.Stop();
+                tcpListener = null;
+                Thread.Sleep(500);
                 if (this.IsActivated == true) {
-                    lock(this.TcpClients) {
-                        foreach (TcpClient tcpClient in this.TcpClients) {
-                            if (tcpClient.Connected && tcpClient != null) {
-                                tcpClient.Close();
+                    lock (this.TcpClients) {
+                        foreach (TcpTracker tcpTracker in this.TcpClients.Values) {
+
+                            if (tcpTracker.TcpClient.Connected && tcpTracker.TcpClient != null) {
+                                tcpTracker.TcpClient.Close();
                             }
                         }
                     }
-                    tcpListener.Stop();
                 }
                 this.IsActivated = false;
                 serverLog = new Log("Server stopped...", LogType.SERVER);
@@ -183,55 +182,62 @@ namespace AtsGps {
                 OnPropertyChanged("BufferIn");
                 OnPropertyChanged("BufferOut");
                 OnPropertyChanged("TcpClients");
-                OnPropertyChanged("TcpTrackers");
             }
         }
-
         #region Asynchronous methods
         private void asyncBeginAccept (IAsyncResult iAsyncResult) {
-            Task.Factory.StartNew(() => {
-                try {
-                    TcpListener tcpListener = (TcpListener)iAsyncResult.AsyncState;
-                    TcpClient tcpClient = tcpListener.EndAcceptTcpClient(iAsyncResult);
-
-                    lock (this.TcpClients) {
-                        this.TcpClients.Add(tcpClient);
-                    }
-
-                    if (tcpClient.Connected && tcpClient != null) {
-                        this.Communicate(tcpClient);
-                    }
-
-                    lock (this.TcpClients) {
-                        this.TcpClients.Remove(tcpClient);
-                    }
-                } catch (Exception exception) {
-                    if (this.IsActivated) {
-                        triggerEvent(new Log(exception.Message, LogType.SERVER));
-                    }
-                } finally {
-
-                }
-            });
-
             try {
-                if (this.IsActivated && tcpListener.Server != null) {
-                    if (tcpListener.Server.IsBound)
-                        tcpListener.BeginAcceptTcpClient(new AsyncCallback(asyncBeginAccept), tcpListener);
-                }
-            }catch (Exception exception) {
-                triggerEvent(new Log(exception.Message, LogType.SERVER));
+                this.Id++;
+                Task newTask = Task.Factory.StartNew(() => {
+                    try {
+                        TcpClient tcpClient = tcpListener.EndAcceptTcpClient(iAsyncResult);
+                        tcpClient.ReceiveTimeout = 60000; //1 min
+                        tcpClient.SendTimeout = 60000; //1 min
+
+
+                        TcpTracker tcpTracker = new TcpTracker() {
+                            Id = this.Id,
+                            Imei = "",
+                            TcpClient = tcpClient,
+                            DataIn = "",
+                            DataOut = "",
+                            DateTime = DateTime.Now
+                        };
+
+                        while (!this.TcpClients.ContainsKey(tcpTracker.Id)) {
+                            this.TcpClients.TryAdd(tcpTracker.Id, tcpTracker);
+                        }
+
+                        if (tcpClient.Connected && tcpClient != null) {
+                            this.Communicate(tcpTracker);
+                        }
+
+                        while (this.TcpClients.ContainsKey(tcpTracker.Id)) {
+                            this.TcpClients.TryRemove(tcpTracker.Id, out tcpTracker);
+                        }
+
+                    } catch (Exception exception) {
+                        if (this.IsActivated) {
+                            triggerEvent(new Log(exception.Message, LogType.SERVER_BEGINACCEPT));
+                        }
+                    }
+                }, TaskCreationOptions.LongRunning);
+
+                tcpListener.BeginAcceptTcpClient(new AsyncCallback(asyncBeginAccept), tcpListener);
+            } catch (Exception exception) {
+                triggerEvent(new Log(exception.Message, LogType.SERVER_BEGINACCEPT));
             }
         }
 
-
-        #endregion
-
+        private void asyncProcessTcp (object state) {
 
 
-        protected virtual void Communicate (TcpClient tcpClient) {
+        }
+
+        protected virtual void Communicate (TcpTracker tcpTracker) {
             throw new NotImplementedException();
         }
+        #endregion
 
     }
 }
