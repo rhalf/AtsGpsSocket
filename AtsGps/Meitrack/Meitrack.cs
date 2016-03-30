@@ -22,7 +22,7 @@ namespace AtsGps.Meitrack {
                     packetArray = packet.Split(',');
                     gm.Raw = packet;
                     gm.Unit = packetArray[1];
-                    gm.Identifier = packet.Substring(2, 1);
+                    gm.Identifier = raw[2];
                     if (packetArray[3].Contains("OK")) {
                         return false;
                     }
@@ -145,7 +145,7 @@ namespace AtsGps.Meitrack {
                 throw exception;
             }
         }
-        public static String GenerateCommand (String[] command, String identifier) {
+        public static String GenerateCommand (String[] command, Int32 identifier) {
             String data = "";
             for (int index = 0; index < command.Length; index++) {
                 data += "," + command[index];
@@ -153,7 +153,11 @@ namespace AtsGps.Meitrack {
             data += "*";
 
             int length = data.Length + 2 + 2;
-            data = "@@" + identifier + length.ToString() + data;
+
+            byte[] response = new byte[1];
+            response[0] = (byte)identifier;
+
+            data = "@@" + ASCIIEncoding.UTF8.GetString(response) + length.ToString() + data;
             data += GetCheckSum(data) + "\r\n";
             return data;
         }

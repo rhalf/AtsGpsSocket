@@ -57,7 +57,7 @@ namespace AtsGps.Meitrack {
 
                     this.TcpClients.TrackersCount = countTrackers(this.TcpClients);
 
-                } while (true);
+                } while (NetworkTool.IsConnected(tcpClient));
             } catch (GmException gmException) {
                 if (gmException.Object != null) {
                     triggerEvent(new Log(gmException.Imei + " : " + gmException.Description + " : " + (String)gmException.Object, LogType.MVT100));

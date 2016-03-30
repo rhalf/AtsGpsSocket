@@ -20,7 +20,7 @@ namespace AtsGps.Teltonika {
 
 
             try {
-
+                //do {
                 NetworkStream networkStream = tcpClient.GetStream();
 
                 //------------------------------------------------Receive message
@@ -33,7 +33,8 @@ namespace AtsGps.Teltonika {
                 Array.Copy(bufferIn, incomingBytes, count);
 
                 if (incomingBytes[0] != 0x00 || incomingBytes[1] != 0x0f) {
-                    throw new GmException(GmException.UNKNOWN_PROTOCOL, "");
+                    return;
+                    //throw new GmException(GmException.UNKNOWN_PROTOCOL, "");
                 }
 
                 gm = new Gm();
@@ -55,13 +56,13 @@ namespace AtsGps.Teltonika {
                 }
 
                 //Communication 3
-                send(networkStream, new byte[] { 0x02, 0x00, 0x00, 0x00 });
-                dataOut = "0x00000002";
+                byte[] response = new byte[] { (byte)gm.RecordCount, 0x00, 0x00, 0x00 };
+                send(networkStream, response);
+                dataOut = "0x000000" + gm.RecordCount.ToString();
 
 
 
                 //------------------------------------------------Send message if theres any
-
                 //if (this.BufferOut != null) {
                 //    if (this.BufferOut.ContainsKey(gm.Unit)) {
                 //        if (this.BufferOut.ContainsKey(gm.Unit)) {
@@ -73,8 +74,8 @@ namespace AtsGps.Teltonika {
                 //        }
                 //    }
                 //}
+                //base.triggerEvent(new Log(BitConverter.ToString(incomingBytes).Replace("-", ""), LogType.FM1100));
 
-                base.triggerEvent(new Log(BitConverter.ToString(incomingBytes).Replace("-", ""), LogType.FM1100));
                 base.triggerDataReceived(gm);
                 tcpTracker.Imei = gm.Unit;
                 tcpTracker.DataIn = gm.Raw;
@@ -82,9 +83,7 @@ namespace AtsGps.Teltonika {
                 tcpTracker.DateTime = DateTime.Now;
 
                 this.TcpClients.TrackersCount = countTrackers(this.TcpClients);
-                tcpClient.Close();
-
-
+                //} while (tcpClient.Connected);
 
             } catch (GmException gmException) {
                 triggerEvent(new Log(gmException.Imei + " : " + gmException.Description, LogType.FM1100));

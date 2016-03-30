@@ -124,7 +124,7 @@ namespace AtsGps {
                 this.TcpClients = new TcpClients();
 
                 if (tcpListener == null) {
-                    tcpListener = new TcpListener(new  IPEndPoint(IPAddress.Parse(this.IpAddress), this.Port));
+                    tcpListener = new TcpListener(new IPEndPoint(IPAddress.Parse(this.IpAddress), this.Port));
                 }
 
                 tcpListener.Start();
@@ -152,12 +152,9 @@ namespace AtsGps {
                 tcpListener = null;
                 Thread.Sleep(500);
                 if (this.IsActivated == true) {
-                    lock (this.TcpClients) {
-                        foreach (TcpTracker tcpTracker in this.TcpClients.Values) {
-
-                            if (tcpTracker.TcpClient.Connected && tcpTracker.TcpClient != null) {
-                                tcpTracker.TcpClient.Close();
-                            }
+                    foreach (TcpTracker tcpTracker in this.TcpClients.Values) {
+                        if (tcpTracker.TcpClient.Connected && tcpTracker.TcpClient != null) {
+                            tcpTracker.TcpClient.Close();
                         }
                     }
                 }

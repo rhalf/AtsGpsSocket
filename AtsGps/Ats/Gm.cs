@@ -5,7 +5,12 @@ using System.Text;
 
 namespace AtsGps.Ats {
     public class Gm {
-        public String Identifier
+        public Int32 Identifier
+        {
+            get;
+            set;
+        }
+        public Int32 RecordCount
         {
             get;
             set;

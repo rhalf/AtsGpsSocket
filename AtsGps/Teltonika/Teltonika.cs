@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace AtsGps.Teltonika {
     public class Teltonika {
@@ -66,6 +67,8 @@ namespace AtsGps.Teltonika {
             byte[] value = null;
 
             try {
+                //value = new byte[] { raw[9] };
+                gm.RecordCount = raw[9];
 
                 value = new byte[] { raw[17], raw[16], raw[15], raw[14], raw[13], raw[12], raw[11], raw[10] };
                 long timeStamp = BitConverter.ToInt64(value, 0) / 1000;
@@ -91,11 +94,11 @@ namespace AtsGps.Teltonika {
                 value = new byte[] { raw[33], raw[32] };
                 gm.Speed = BitConverter.ToInt16(value, 0).ToString();
 
-
+                //==========================IO 
+                // events
                 value = new byte[] { raw[34] };
                 int events = value[0];
 
-                //==========================IO 
                 //elements in record
                 value = new byte[] { raw[35] };
                 int ioElementTotalCount = value[0];
@@ -116,26 +119,27 @@ namespace AtsGps.Teltonika {
                 indexStart = 37;
                 indexOn = 0;
 
-                for (int index = 0; index < ioElementCount1b; index += 2) {
-                    indexOn = indexStart++;
+                for (int index = 0; index < ioElementCount1b; index++) {
+                    indexOn = indexStart + (index * 2);
                     ioArray1b.Add(
                         new Io() {
                             Id = raw[indexOn],
                             Value = raw[indexOn + 1]
                         });
                 }
+                //throw new Exception(JsonConvert.SerializeObject(ioArray1b));
                 #endregion  elements1b
 
                 #region elements2b
 
-                value = new byte[] { raw[indexOn++] };
+                value = new byte[] { raw[indexOn + 2] };
                 int ioElementCount2b = value[0];
 
-                indexStart = indexOn += 2;
+                indexStart = indexOn + 3;
                 indexOn = 0;
 
-                for (int index = 0; index < ioElementCount2b; index += 3) {
-                    indexOn = indexStart + index;
+                for (int index = 0; index < ioElementCount2b; index++) {
+                    indexOn = indexStart + (index * 3);
                     ioArray2b.Add(
                         new Io() {
                             Id = raw[indexOn],
@@ -146,17 +150,18 @@ namespace AtsGps.Teltonika {
                                 }, 0)
                         });
                 }
+                //throw new Exception(JsonConvert.SerializeObject(ioArray2b));
                 #endregion elements2b
                 #region elements4b
 
-                value = new byte[] { raw[indexOn++] };
+                value = new byte[] { raw[indexOn + 3] };
                 int ioElementCount4b = value[0];
 
-                indexStart = indexOn += 2;
+                indexStart = indexOn + 4;
                 indexOn = 0;
 
-                for (int index = 0; index < ioElementCount4b; index += 5) {
-                    indexOn = indexStart + index;
+                for (int index = 0; index < ioElementCount4b; index++) {
+                    indexOn = indexStart + (index * 5);
                     ioArray4b.Add(
                         new Io() {
                             Id = raw[indexOn],
@@ -169,20 +174,22 @@ namespace AtsGps.Teltonika {
                                 }, 0)
                         });
                 }
+                //throw new Exception(JsonConvert.SerializeObject(ioArray4b));
+
                 #endregion elements4b
 
                 //===============================
                 int acc = 0;
                 foreach (Io io in ioArray1b) {
                     //EF - Ignition IO ID 239
-                    if (io.Id == 239)
+                    if (io.Id == 0xEF)
                         acc = io.Value;
                 }
 
                 int mileAge = 0;
                 foreach (Io io in ioArray4b) {
                     //EF - Odometer IO ID 199 
-                    if (io.Id == 199)
+                    if (io.Id == 0xC7)
                         mileAge = io.Value;
                 }
                 //===============================
@@ -204,10 +211,16 @@ namespace AtsGps.Teltonika {
                 gm.Data = sb.ToString();
 
                 gm.LastTime = "0";
-                gm.Raw = BitConverter.ToString(raw).Replace("-", "");
+
+                StringBuilder sb1 = new StringBuilder();
+                foreach (Io io in ioArray1b) {
+                    sb1.Append(io.Id.ToString() + ":" + io.Value.ToString() + ",");
+                }
+
+                gm.Raw = sb1.ToString();//BitConverter.ToString(raw).Replace("-", "");
 
             } catch (Exception exception) {
-                throw new GmException(GmException.UNKNOWN_PROTOCOL, exception.Message);
+                throw new GmException(GmException.UNKNOWN_PROTOCOL, gm.Unit, exception);
             }
             return true;
         }
