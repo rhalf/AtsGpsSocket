@@ -45,9 +45,10 @@ namespace AtsGps.Meitrack {
                                 }
                             }
                         }
-                    } else {
-                        send(networkStream, new byte[] { 0x00 });
-                    }
+                    } 
+                    //else {
+                    //    send(networkStream, new byte[] { 0x00 });
+                    //}
 
 
                     tcpTracker.Imei = gm.Unit;

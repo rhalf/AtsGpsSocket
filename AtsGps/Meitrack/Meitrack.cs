@@ -99,11 +99,36 @@ namespace AtsGps.Meitrack {
                     throw new GmException(GmException.UNKNOWN_PROTOCOL, "Parsing Error on Secondary Properties.", packet);
                 }
 
+                int[] aIo = new int[16];
+
                 try {
+
+                    //Int32 io = Int32.Parse(packetArray[17], System.Globalization.NumberStyles.HexNumber);
+
+                    //for (int index = 0; index < 16; index++) {
+                    //    if (((io >> (index)) & 1) == 1) {
+                    //        sb.Append("1,");
+                    //    } else {
+                    //        sb.Append("0,");
+                    //    }
+                    //}
+
                     Int32 io = Int32.Parse(packetArray[17], System.Globalization.NumberStyles.HexNumber);
 
                     for (int index = 0; index < 16; index++) {
                         if (((io >> (index)) & 1) == 1) {
+                            aIo[index] = 1;
+                        } else {
+                            aIo[index] = 0;
+                        }
+                    }
+
+                    if (aIo[10] == 1) {
+                        aIo[9] = 1;
+                    }
+
+                    for (int index = 0; index < 16; index++) {
+                        if (aIo[index] == 1) {
                             sb.Append("1,");
                         } else {
                             sb.Append("0,");
