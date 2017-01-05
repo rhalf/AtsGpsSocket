@@ -5,13 +5,20 @@ using System.Linq;
 using System.Text;
 
 namespace AtsGps {
-    public class TcpClients : ConcurrentDictionary<long, TcpTracker> {
+    public class TcpClients : ConcurrentDictionary<Guid, TcpTracker> {
 
 
         public int TrackersCount
         {
-            get;
-            set;
+           get {
+                int count = 0;
+                foreach (TcpTracker tcpTracker2 in this.Values) {
+                    if (!String.IsNullOrEmpty(tcpTracker2.Imei)) {
+                        count++;
+                    }
+                }
+                return count;
+            }
         }
 
     }

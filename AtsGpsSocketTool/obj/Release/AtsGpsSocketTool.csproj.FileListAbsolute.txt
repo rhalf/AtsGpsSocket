@@ -1,0 +1,17 @@
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\bin\Release\AtsGpsSocketTool.exe.config
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\bin\Release\AtsGpsSocketTool.exe
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\bin\Release\AtsGpsSocketTool.pdb
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\bin\Release\AtsGps.dll
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\bin\Release\System.Net.Http.dll
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\bin\Release\AtsGps.pdb
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\bin\Release\System.Net.Http.xml
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\Release\AtsGpsSocketTool.csprojResolveAssemblyReference.cache
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\Release\MainWindow.baml
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\Release\MainWindow.g.cs
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\Release\App.g.cs
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\Release\AtsGpsSocketTool_MarkupCompile.cache
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\Release\AtsGpsSocketTool.g.resources
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\Release\AtsGpsSocketTool.Properties.Resources.resources
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\Release\AtsGpsSocketTool.csproj.GenerateResource.Cache
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\Release\AtsGpsSocketTool.exe
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGpsSocketTool\obj\Release\AtsGpsSocketTool.pdb

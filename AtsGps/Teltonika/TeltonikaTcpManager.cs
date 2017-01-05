@@ -82,7 +82,7 @@ namespace AtsGps.Teltonika {
                 tcpTracker.DataOut = dataOut;
                 tcpTracker.DateTime = DateTime.Now;
 
-                this.TcpClients.TrackersCount = countTrackers(this.TcpClients);
+                //this.TcpClients.TrackersCount = countTrackers(this.TcpClients);
                 //} while (tcpClient.Connected);
 
             } catch (GmException gmException) {
@@ -95,7 +95,7 @@ namespace AtsGps.Teltonika {
                     tcpTracker.DataIn = "";
                     tcpTracker.DataOut = "";
                     tcpTracker.DateTime = DateTime.Now;
-                    this.TcpClients.TrackersCount = countTrackers(this.TcpClients);
+                    //this.TcpClients.TrackersCount = countTrackers(this.TcpClients);
                 }
                 tcpClient.Close();
             }

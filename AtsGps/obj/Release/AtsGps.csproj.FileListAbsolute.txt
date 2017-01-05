@@ -1,0 +1,8 @@
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGps\bin\Release\AtsGps.dll
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGps\bin\Release\AtsGps.pdb
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGps\bin\Release\Newtonsoft.Json.dll
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGps\bin\Release\System.Net.Http.dll
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGps\bin\Release\Newtonsoft.Json.xml
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGps\bin\Release\System.Net.Http.xml
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGps\obj\Release\AtsGps.dll
+C:\Users\Rhalf\Documents\GitHub\AtsGpsSocket\AtsGps\obj\Release\AtsGps.pdb
